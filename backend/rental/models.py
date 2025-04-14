@@ -329,6 +329,7 @@ class Tenant(models.Model):
         verbose_name=_("Extra fees"),
         help_text=_("Extra fees other than unit rent."),
         blank=True,
+        related_name="tenants",
     )
     updated_at = models.DateTimeField(
         auto_now=True,

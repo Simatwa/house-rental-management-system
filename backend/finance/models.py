@@ -107,7 +107,7 @@ class Payment(models.Model):
 
 
 class ExtraFee(models.Model):
-    name = models.CharField(max_length=100, help_text=_("Fee name"))
+    name = models.CharField(max_length=100, help_text=_("Fee name"), unique=True)
     details = models.TextField(help_text=_("What is this fee for?"))
     amount = models.DecimalField(
         max_digits=8, decimal_places=2, help_text=_("Fee amount in Ksh")

@@ -102,7 +102,7 @@ class MessageAdmin(DevelopmentImportExportModelAdmin):
         ),
         (_("Status & Date"), {"fields": ("is_read", "created_at")}),
     )
-    readonly_fields = ("created_at", "sender", "email", "body")
+    readonly_fields = ("created_at",)  # "sender", "email", "body")
 
 
 @admin.register(FAQ)

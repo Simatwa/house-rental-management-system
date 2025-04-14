@@ -1,0 +1,82 @@
+[
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 10",
+        "abbreviated_name": "SFR10",
+        "occupied_status": "Vacant",
+        "updated_at": "2025-04-14 23:32:38",
+        "created_at": "2025-04-14 23:32:38"
+    },
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 9",
+        "abbreviated_name": "SFR9",
+        "occupied_status": "Vacant",
+        "updated_at": "2025-04-14 23:32:38",
+        "created_at": "2025-04-14 23:32:38"
+    },
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 8",
+        "abbreviated_name": "SFR8",
+        "occupied_status": "Vacant",
+        "updated_at": "2025-04-14 23:32:38",
+        "created_at": "2025-04-14 23:32:38"
+    },
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 7",
+        "abbreviated_name": "SFR7",
+        "occupied_status": "Vacant",
+        "updated_at": "2025-04-14 23:32:38",
+        "created_at": "2025-04-14 23:32:38"
+    },
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 6",
+        "abbreviated_name": "SFR6",
+        "occupied_status": "Vacant",
+        "updated_at": "2025-04-14 23:32:38",
+        "created_at": "2025-04-14 23:32:38"
+    },
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 5",
+        "abbreviated_name": "SFR5",
+        "occupied_status": "Vacant",
+        "updated_at": "2025-04-14 23:32:38",
+        "created_at": "2025-04-14 23:32:38"
+    },
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 4",
+        "abbreviated_name": "SFR4",
+        "occupied_status": "Vacant",
+        "updated_at": "2025-04-14 23:32:38",
+        "created_at": "2025-04-14 23:32:38"
+    },
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 3",
+        "abbreviated_name": "SFR3",
+        "occupied_status": "Vacant",
+        "updated_at": "2025-04-14 23:32:38",
+        "created_at": "2025-04-14 23:32:38"
+    },
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 2",
+        "abbreviated_name": "SFR2",
+        "occupied_status": "Vacant",
+        "updated_at": "2025-04-14 23:32:38",
+        "created_at": "2025-04-14 23:32:38"
+    },
+    {
+        "unit_group": 1,
+        "name": "Second Floor Room 1",
+        "abbreviated_name": "SFR1",
+        "occupied_status": "Occupied",
+        "updated_at": "2025-04-14 23:59:05",
+        "created_at": "2025-04-14 23:32:38"
+    }
+]

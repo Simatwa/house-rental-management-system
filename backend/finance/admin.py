@@ -58,15 +58,15 @@ class PaymentAdmin(DevelopmentImportExportModelAdmin):
 
 @admin.register(ExtraFee)
 class ExtraFeeAdmin(DevelopmentImportExportModelAdmin):
-    def total_appointments_charged(self, obj: ExtraFee) -> int:
-        return obj.appointments.filter(created_at__date=timezone.now().date()).count()
+    def total_tenants_charged(self, obj: ExtraFee) -> int:
+        return obj.tenants.count()
 
-    total_appointments_charged.short_description = _("Today's Appointments")
+    total_tenants_charged.short_description = _("Total tenants charged")
 
     list_display = (
         "name",
         "amount",
-        "total_appointments_charged",
+        "total_tenants_charged",
         "updated_at",
         "created_at",
     )
