@@ -1,129 +1,43 @@
 from django.db import models
 from users.models import CustomUser
+from management.models import Office
 from rental_ms.utils import EnumWithChoices, generate_document_filepath
+from management.models import Community
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
+from django.core.validators import RegexValidator
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils import timezone
 from finance.models import ExtraFee
+from ckeditor.fields import RichTextField
 
 
-# Create your models here.
-
-
-class UnitGroup(models.Model):
+# Create your models here
+class House(models.Model):
     name = models.CharField(
         max_length=100,
-        verbose_name=_("Name"),
-        help_text=_("Name of the unit group e.g Second Floor"),
+        verbose_name=_("House name"),
+        help_text=_("Identity name of the house"),
         unique=True,
     )
-    abbreviated_name = models.CharField(
-        max_length=20,
-        verbose_name=_("Abbreviated name"),
-        help_text=_("Short name of the unitgroup e.g SF"),
-    )
-    description = models.TextField(
-        verbose_name=_("Description"),
-        help_text=_("Description of the unit group"),
+    office = models.ForeignKey(
+        Office,
+        on_delete=models.RESTRICT,
+        verbose_name=_("Office"),
+        help_text=_("Office in charge of managing the house"),
+        related_name="houses",
         blank=True,
         null=True,
     )
-    number_of_rooms = models.IntegerField(
-        verbose_name=_("Number of Rooms"),
-        help_text=_("Total number of rooms"),
-        null=False,
-        blank=False,
-    )
-    picture = models.ImageField(
-        verbose_name=_("Picture"),
-        help_text=_("Photo of the units"),
-        upload_to=generate_document_filepath,
-        default="default/house-7124141_1920.jpg",
-        blank=False,
-    )
-    monthly_rent = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        verbose_name=_("Monthly Rent"),
-        help_text=_("Monthly rent amount for the units"),
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name=_("Created At"),
-        help_text=_("Date and time when the entry was created"),
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name=_("Updated At"),
-        help_text=_("Date and time when the entry was last updated"),
-    )
-
-    class Meta:
-        verbose_name = _("Unit Group")
-        verbose_name_plural = _("Unit Groups")
-
-    def __str__(self):
-        return self.name
-
-    def save(self):
-        # TODO: When saving the instance, auto-generate units based on
-        # 1. number_of_rooms and unit group name
-        # e.g SFR2
-        pass
-
-
-class Unit(models.Model):
-
-    class OccupiedStatus(EnumWithChoices):
-        OCCUPIED = "occupied", _("Occupied")
-        VACANT = "vacant", _("Vacant")
-
-    name = models.CharField(
-        max_length=100,
-        verbose_name=_("Name"),
-        help_text=_("Name of the unit e.g Second Floor Room 2"),
-        unique=True,
-    )
-    abbreviated_name = models.CharField(
-        max_length=20,
-        verbose_name=_("Abbreviated name"),
-        help_text=_("Short name of the unit e.g SFR2"),
-    )
-    occupied_status = models.BooleanField(
-        default=False,
-        verbose_name=_("Is Occupied"),
-        help_text=_("Whether the unit is currently occupied"),
-    )
-
-    occupied_status = models.CharField(
-        max_length=20,
-        choices=OccupiedStatus.choices(),
-        default=OccupiedStatus.VACANT.value,
-        verbose_name=_("Occupied Status"),
-        help_text=_("Whether the unit is currently occupied"),
-    )
-    unit_group = models.ForeignKey(
-        UnitGroup,
-        on_delete=models.CASCADE,
-        verbose_name=_("unit group"),
-        help_text=_("UnitGroup which the unit belongs to."),
-        null=False,
-        blank=False,
-    )
-
-    class Meta:
-        verbose_name = _("Unit")
-        verbose_name_plural = _("Units")
-
-
-class House(models.Model):
     address = models.CharField(
         max_length=200,
         verbose_name=_("Address"),
         help_text=_("Physical address of the house"),
-        unique=True,
+    )
+    description = RichTextField(
+        verbose_name=_("Description"),
+        help_text=_("Description of the house"),
     )
     picture = models.ImageField(
         verbose_name=_("Picture"),
@@ -131,6 +45,13 @@ class House(models.Model):
         upload_to=generate_document_filepath,
         default="default/apartment-2138949_1920.jpg",
         null=False,
+        blank=True,
+    )
+    communities = models.ManyToManyField(
+        Community,
+        blank=True,
+        verbose_name=_("Communities"),
+        help_text=_("Social communities"),
     )
     updated_at = models.DateTimeField(
         auto_now=True,
@@ -148,16 +69,230 @@ class House(models.Model):
         verbose_name_plural = _("Houses")
 
     def __str__(self):
-        return f"{self.address} - {'Occupied' if self.is_occupied else 'Vacant'}"
+        return f"{self.name} - {self.address}"
 
     def model_dump(self):
         return dict(
             id=self.id,
+            name=self.name,
+            office_id=self.office.id,
             address=self.address,
-            is_occupied=self.is_occupied,
+            description=self.description,
             picture=self.picture.name,
-            updated_at=self.updated_at,
-            created_at=self.created_at,
+            communities_ids=[community.id for community in self.communities.all()],
+        )
+
+
+class UnitGroup(models.Model):
+    house = models.ForeignKey(
+        House,
+        on_delete=models.CASCADE,
+        verbose_name=_("House"),
+        help_text=_("House which the unit-group belongs to."),
+        related_name="unit_groups",
+    )
+    name = models.CharField(
+        max_length=100,
+        verbose_name=_("Name"),
+        help_text=_("Name of the unit group e.g Second Floor"),
+        unique=True,
+    )
+    abbreviated_name = models.CharField(
+        max_length=20,
+        verbose_name=_("Abbreviated name"),
+        help_text=_("Short name of the unitgroup e.g SF"),
+    )
+    description = RichTextField(
+        verbose_name=_("Description"),
+        help_text=_("Description of the unit group"),
+        blank=True,
+        null=True,
+    )
+    number_of_units = models.IntegerField(
+        verbose_name=_("Number of units"),
+        help_text=_("Total number of units (rooms)"),
+        null=False,
+        blank=False,
+    )
+    picture = models.ImageField(
+        verbose_name=_("Picture"),
+        help_text=_("Photo of the units"),
+        upload_to=generate_document_filepath,
+        default="default/house-7124141_1920.jpg",
+        null=False,
+        blank=True,
+    )
+    monthly_rent = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name=_("Monthly Rent"),
+        help_text=_("Monthly rent amount for the units"),
+    )
+    caretakers = models.ManyToManyField(
+        CustomUser,
+        verbose_name=_("Caretaker"),
+        help_text=_("Persons in charge of routine and minor tasks"),
+        related_name="unit_groups",
+        blank=True,
+    )
+    unit_name_format = models.CharField(
+        max_length=200,
+        verbose_name=_("Unit name format"),
+        help_text=_(
+            "Format for generating unit name. "
+            "Use placeholders %(name)s and %(unit_number)s."
+        ),
+        default="%(name)s Room %(unit_number)s",
+        validators=[
+            RegexValidator(
+                regex=r"^.*%\((name|unit_number)\)s.*$",
+                message=_(
+                    "Placeholders must only use 'name' or 'unit_number' with 's'."
+                ),
+                code="invalid_placeholder_format",
+            )
+        ],
+    )
+    unit_abbreviated_name_format = models.CharField(
+        max_length=200,
+        verbose_name=_("Unit abbreviated name format"),
+        help_text=_(
+            "Format for generating abbreviated unit name. "
+            "Use placeholders %(abbreviated_name)s and %(unit_number)s ."
+        ),
+        default="%(abbreviated_name)sR%(unit_number)s",
+        validators=[
+            RegexValidator(
+                regex=r"^.*%\((abbreviated_name|unit_number)\)s.*$",
+                message=_(
+                    "Placeholders must only use 'abbreviated_name' or 'unit_number' with 's'."
+                ),
+                code="invalid_placeholder_format",
+            )
+        ],
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Created At"),
+        help_text=_("Date and time when the entry was created"),
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("Updated At"),
+        help_text=_("Date and time when the entry was last updated"),
+    )
+
+    class Meta:
+        verbose_name = _("Unit Group")
+        verbose_name_plural = _("Unit Groups")
+
+    def __str__(self):
+        return f"{self.name} ({self.abbreviated_name})"
+
+    def generate_unit_name(self, unit_number: int):
+        return self.unit_name_format % dict(
+            name=self.name, unit_number=str(unit_number)
+        )
+
+    def generate_abbr_unit_name(self, unit_number: int):
+        return self.unit_abbreviated_name_format % dict(
+            abbreviated_name=self.abbreviated_name, unit_number=str(unit_number)
+        )
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            # Initial save
+            super().save(*args, **kwargs)
+            self.refresh_from_db()
+        saved_units_query = Unit.objects.filter(unit_group=self).all()
+        total_current_units = saved_units_query.count()
+        if total_current_units < self.number_of_units:
+            # add the units
+            next_unit_no = total_current_units + 1
+            for _ in range(self.number_of_units - total_current_units):
+                new_unit = Unit.objects.create(
+                    name=self.generate_unit_name(next_unit_no),
+                    abbreviated_name=self.generate_abbr_unit_name(next_unit_no),
+                    unit_group=self,
+                )
+                new_unit.save()
+                next_unit_no += 1
+        else:
+            # Maybe others were occasionally added
+            pass
+
+    def model_dump(self):
+        return dict(
+            house_id=self.house.id,
+            name=self.name,
+            abbreviated_name=self.abbreviated_name,
+            description=self.description,
+            number_of_units=self.number_of_units,
+            picture=self.picture.name,
+            monthly_rent=self.monthly_rent,
+            caretakers_ids=[caretaker.id for caretaker in self.caretakers.all()],
+        )
+
+
+class Unit(models.Model):
+
+    class OccupiedStatus(EnumWithChoices):
+        OCCUPIED = "Occupied"
+        VACANT = "Vacant"
+        CLOSED = "Closed"
+
+    unit_group = models.ForeignKey(
+        UnitGroup,
+        on_delete=models.CASCADE,
+        verbose_name=_("unit group"),
+        help_text=_("UnitGroup which the unit belongs to."),
+        related_name="units",
+        null=False,
+        blank=False,
+    )
+    name = models.CharField(
+        max_length=100,
+        verbose_name=_("Name"),
+        help_text=_("Name of the unit e.g Second Floor Room 2"),
+        unique=True,
+    )
+    abbreviated_name = models.CharField(
+        max_length=20,
+        verbose_name=_("Abbreviated name"),
+        help_text=_("Short name of the unit e.g SFR2"),
+    )
+
+    occupied_status = models.CharField(
+        max_length=20,
+        choices=OccupiedStatus.choices(),
+        default=OccupiedStatus.VACANT.value,
+        verbose_name=_("Occupied Status"),
+        help_text=_("Whether this unit is currently Vacant/Occupied/Closed"),
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("Updated At"),
+        help_text=_("Date and time when the entry was last updated"),
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Created At"),
+        help_text=_("Date and time when the entry was created"),
+    )
+
+    class Meta:
+        verbose_name = _("Unit")
+        verbose_name_plural = _("Units")
+
+    def __str__(self):
+        return f"{self.name} ({self.abbreviated_name})"
+
+    def model_dump(self):
+        return dict(
+            name=self.name,
+            abbreviated_name=self.abbreviated_name,
+            occupied_status=self.occupied_status,
+            unit_group_id=self.unit_group.id,
         )
 
 
@@ -167,18 +302,21 @@ class Tenant(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("User"),
         help_text=_("User associated with the tenant"),
+        related_name="tenant",
     )
-    house = models.OneToOneField(
-        House,
-        on_delete=models.SET_NULL,
-        verbose_name=_("House"),
-        help_text=_("House rented by the tenant"),
-        null=True,
+    unit = models.OneToOneField(
+        Unit,
+        on_delete=models.CASCADE,
+        verbose_name=_("Unit"),
+        help_text=_("Person who occupies this unit."),
+        related_name="tenant",
         blank=True,
+        null=True,
     )
     lease_start_date = models.DateField(
         verbose_name=_("Lease Start Date"),
         help_text=_("Start date of the lease agreement"),
+        default=timezone.now,
     )
     lease_end_date = models.DateField(
         verbose_name=_("Lease End Date"),
@@ -186,10 +324,11 @@ class Tenant(models.Model):
         null=True,
         blank=True,
     )
-    contact_number = models.CharField(
-        max_length=20,
-        verbose_name=_("Contact Number"),
-        help_text=_("Phone number of the tenant"),
+    extra_fees = models.ManyToManyField(
+        ExtraFee,
+        verbose_name=_("Extra fees"),
+        help_text=_("Extra fees other than unit rent."),
+        blank=True,
     )
     updated_at = models.DateTimeField(
         auto_now=True,
@@ -207,16 +346,31 @@ class Tenant(models.Model):
         verbose_name_plural = _("Tenants")
 
     def __str__(self):
-        return f"{self.user.get_full_name()} - {self.house.address if self.house else 'No House Assigned'}"
+        return f"{self.user} - {self.unit.abbreviated_name if self.unit else '[No Unit Assigned]'}"
+
+    def _update_unit_status(self, status: Unit.OccupiedStatus):
+        if self.unit is not None:
+            self.unit.occupied_status = status
+            self.unit.save()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            # TODO: Welcome tenant via email
+            pass
+        super().save(*args, **kwargs)
+        self._update_unit_status("Occupied")
+
+    def delete(self, *args, **kwargs):
+        self._update_unit_status("Vacant")
+        super().delete(*args, **kwargs)
 
     def model_dump(self):
         return dict(
             id=self.id,
             user_id=self.user.id,
-            house_id=self.house.id if self.house else None,
+            unit_id=self.unit.id,
             lease_start_date=self.lease_start_date,
             lease_end_date=self.lease_end_date,
-            contact_number=self.contact_number,
             updated_at=self.updated_at,
             created_at=self.created_at,
         )

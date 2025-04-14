@@ -8,10 +8,10 @@ from django.utils import timezone
 
 class About(models.Model):
     name = models.CharField(
-        max_length=40, help_text="The brand name", default="Carwash MS"
+        max_length=40, help_text="The brand name", default="Rental MS"
     )
     short_name = models.CharField(
-        max_length=30, help_text="Brand abbreviated name", default="CMS"
+        max_length=30, help_text="Brand abbreviated name", default="RMS"
     )
     slogan = models.TextField(
         help_text=_("Brand's slogan"),
@@ -37,7 +37,7 @@ class About(models.Model):
         help_text="Website's admin email",
         null=True,
         blank=True,
-        default="admin@carwashms.com",
+        default="admin@rentalms.com",
     )
     phone_number = models.CharField(
         max_length=50,
@@ -92,11 +92,15 @@ class About(models.Model):
         help_text=_("Carwash logo  (preferrably 64*64px png)"),
         upload_to=generate_document_filepath,
         default="default/logo.png",
+        blank=True,
+        null=False,
     )
     wallpaper = models.ImageField(
         help_text=_("Site wallpaper"),
         upload_to=generate_document_filepath,
-        default="default/car-7291166_1920.jpg",
+        default="default/leohoho-QL7KdXdcfWA-unsplash.jpg",
+        blank=True,
+        null=False,
     )
     updated_at = models.DateTimeField(
         auto_now=True,

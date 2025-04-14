@@ -2,6 +2,7 @@ from pydantic import BaseModel, HttpUrl
 from typing import Literal, Optional, Annotated  #
 from envist import Envist
 
+
 class EnvSettings(BaseModel):
     """App's config parsed from .env file"""
 

@@ -176,6 +176,8 @@ admin
 jazzmin
 vendor
 user_profile
+house
+unitgroup
 document
 migrations
 /backend/files/static/

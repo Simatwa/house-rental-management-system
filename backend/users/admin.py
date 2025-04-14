@@ -31,8 +31,8 @@ from django.contrib.auth.forms import (
     UserChangeForm,
 )
 
-# from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
-# from django.contrib.auth.models import Group
+from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
+from django.contrib.auth.models import Group
 
 # from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 # from unfold.admin import ModelAdmin
@@ -43,15 +43,6 @@ from rental_ms.utils.admin import DevelopmentImportExportModelAdmin
 @admin.register(CustomUser)
 class CustomUserAdmin(DevelopmentImportExportModelAdmin):
 
-    def total_appointments(self, obj: CustomUser) -> int:
-        return obj.appointments.count()
-
-    total_appointments.short_description = _("Total Appointments")
-
-    def confirmed_appointments(self, obj: CustomUser) -> int:
-        return obj.appointments.filter(status="Confirmed").count()
-
-    confirmed_appointments.short_description = _("In progress orders")
     form = UserChangeForm
     add_form = AdminUserCreationForm
     change_user_password_template = None
@@ -60,9 +51,7 @@ class CustomUserAdmin(DevelopmentImportExportModelAdmin):
     list_display = [
         "username",
         "email",
-        "location",
-        "total_appointments",
-        "confirmed_appointments",
+        "occupation",
         "last_login",
     ]
     # list_display = ("username", "email", "is_staff")
@@ -73,7 +62,7 @@ class CustomUserAdmin(DevelopmentImportExportModelAdmin):
         "groups",
         "date_joined",
     )
-    search_fields = ("username", "first_name", "last_name", "email")
+    search_fields = ("username", "first_name", "last_name", "email", "identity_number")
     ordering = ("-last_login",)
     filter_horizontal = (
         "groups",
@@ -82,18 +71,31 @@ class CustomUserAdmin(DevelopmentImportExportModelAdmin):
 
     # exclude = ["last_login", "date_joined", "token"]
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (
+            None,
+            {
+                "fields": (
+                    "username",
+                    "identity_number",
+                    "password",
+                )
+            },
+        ),
         (
             _("Personal info"),
             {
                 "fields": (
                     "first_name",
                     "last_name",
-                    "email",
-                    "phone_number",
-                    "location",
+                    "gender",
                     "profile",
                 )
+            },
+        ),
+        (
+            _("Contacts & Occupation"),
+            {
+                "fields": ("email", "phone_number", "occupation"),
             },
         ),
         (
@@ -292,11 +294,10 @@ class CustomUserAdmin(DevelopmentImportExportModelAdmin):
         return super().response_add(request, obj, post_url_continue)
 
 
-""" # Unfold stuffs
+# Unfold stuffs
 admin.site.unregister(Group)
 
 
 @admin.register(Group)
-class GroupAdmin(BaseGroupAdmin, ModelAdmin):
+class GroupAdmin(BaseGroupAdmin, DevelopmentImportExportModelAdmin):
     pass
-"""

@@ -54,6 +54,10 @@ class UserAccount(models.Model):
         help_text=_("Date and time when the entry was created"),
     )
 
+    @property
+    def debt_amount(self):
+        return 0 if self.balance > 0 else abs(self.balance)
+
     def __str__(self):
         return str(self.balance)
 

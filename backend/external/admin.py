@@ -16,10 +16,25 @@ from rental_ms.utils.admin import (
 class AboutAdmin(DevelopmentImportExportModelAdmin):
     list_display = ("name", "short_name", "founded_in", "updated_at")
     fieldsets = (
-        (None, {"fields": ("name", "short_name", "slogan", "details", "address")}),
         (
-            _("History"),
-            {"fields": ("founded_in",)},
+            None,
+            {
+                "fields": (
+                    "name",
+                    "short_name",
+                    "slogan",
+                    "details",
+                )
+            },
+        ),
+        (
+            _("Address & History"),
+            {
+                "fields": (
+                    "address",
+                    "founded_in",
+                )
+            },
         ),
         (
             _("Contact"),

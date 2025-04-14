@@ -11,10 +11,12 @@ class CustomUserCreationForm(forms.ModelForm):
         fields = [
             "first_name",
             "last_name",
+            "gender",
             "username",
+            "identity_number",
             "phone_number",
             "email",
-            "location",
+            "occupation",
             "password",
             # "profile",
         ]
@@ -34,9 +36,12 @@ class CustomUserUpdateForm(forms.ModelForm):
         fields = [
             "first_name",
             "last_name",
-            "username",
+            # "gender",
+            # "username",
+            "identity_number",
             "phone_number",
             "email",
-            "location",
+            "occupation",
             "password",
+            # "profile",
         ]

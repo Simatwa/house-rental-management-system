@@ -6,7 +6,7 @@ install:
 	pip install -r requirements.txt
 
 setup:
-	python manage.py makemigrations users finance external carwash
+	python manage.py makemigrations users finance external rental management
 
 	python manage.py migrate
 
@@ -15,7 +15,7 @@ setup:
 
 developmentsuperuser:
 	python manage.py createsuperuser --username developer \
-	 --email developer@localhost.domain --noinput
+	 --email developer@localhost.domain --noinput --identity_number 12345678
 
 runserver:
 	python manage.py runserver

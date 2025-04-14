@@ -85,6 +85,11 @@ class CustomUser(AbstractUser):
         unique=True,
     )
 
+    REQUIRED_FIELDS = (
+        "email",
+        "identity_number",
+    )
+
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
