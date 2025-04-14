@@ -1,0 +1,105 @@
+{% load my_filters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Cancelled</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #f44336;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .content {
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .content h2 {
+            color: #f44336;
+            font-size: 20px;
+        }
+
+        .content p {
+            margin: 10px 0;
+        }
+
+        .footer {
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Appointment Cancelled</h1>
+        </div>
+        <div class="content">
+            <h2>Dear {{ appointment.customer.username }},</h2>
+            <p>We regret to inform you that your car-wash appointment has been cancelled.</p>
+            <p>Appointment Details:</p>
+            <ul>
+                <li><strong>Appointment ID:</strong> {{ appointment.id }}</li>
+                <li><strong>Service:</strong> {{ appointment.service }}</li>
+                <li><strong>Branch:</strong> {{ appointment.branch }}</li>
+                <li><strong>Vehicle plate number:</strong> {{ appointment.vehicle_plate_number }}</li>
+                <li><strong>Date & Time:</strong> {{ appointment.appointment_datetime|date:"F d, Y, h:i A" }}</li>
+                <li><strong>Charges:</strong> Ksh. {{ appointment.total_charges|format_money_value }}</li>
+            </ul>
+            <p>If you have any questions or need further assistance, please do not hesitate to contact us.</p>
+            <a href="{{ '#contact'|endpoint_url }}" class="button">Contact Support</a>
+        </div>
+        <div class="footer">
+            <p>We apologize for any inconvenience caused.</p>
+            <p>&copy; {{ year }} {{ site_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

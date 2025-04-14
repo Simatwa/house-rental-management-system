@@ -1,0 +1,73 @@
+{% load my_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Received Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        .content h2 {
+            color: #28a745;
+            font-size: 20px;
+        }
+        .content p {
+            margin: 10px 0;
+        }
+        .footer {
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Message Received</h1>
+        </div>
+        <div class="content">
+            <h2>Dear {{ message.sender }},</h2>
+            <p>We have received your message sent on <strong>{{ message.created_at|date:"F j, Y, g:i A" }}</strong>. Below is a copy of your message:</p>
+            <div style="margin-top: 20px; padding: 10px; background-color: #f1f1f1; border: 1px solid #ddd; border-radius: 4px;">
+                <p>{{ message.body }}</p>
+            </div>
+            <p>We will review your message and get back to you as soon as possible. Thank you for reaching out to us!</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for using {{ site_name }}!</p>
+            <p>&copy; {{ year }} {{ site_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html></div>
