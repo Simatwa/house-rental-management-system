@@ -12,13 +12,49 @@ class HouseAdmin(DevelopmentImportExportModelAdmin):
     def total_unit_groups(cls, obj: House):
         return obj.unit_groups.count()
 
-    total_unit_groups.description = _("Total unit groups")
+    total_unit_groups.short_description = _("No. of unit groups")
+
+    def total_units(cls, obj: House):
+        return Unit.objects.filter(unit_group__house=obj).count()
+
+    total_units.short_description = _("No. of units")
+
+    def total_vacant_units(cls, obj: House):
+        return Unit.objects.filter(
+            unit_group__house=obj, occupied_status=Unit.OccupiedStatus.VACANT.value
+        ).count()
+
+    total_vacant_units.short_description = _("No. of vacant units")
+
+    def total_occupied_units(cls, obj: House):
+        return Unit.objects.filter(
+            unit_group__house=obj, occupied_status=Unit.OccupiedStatus.OCCUPIED.value
+        ).count()
+
+    total_occupied_units.short_description = _("No. of occcupied units")
+
+    def monthly_income(cl, obj: House):
+        net_income = sum(
+            unit_group.monthly_rent
+            * Unit.objects.filter(
+                unit_group=unit_group,
+                occupied_status=Unit.OccupiedStatus.OCCUPIED.value,
+            ).count()
+            for unit_group in obj.unit_groups.all()
+        )
+        return f"Ksh. {net_income:,}"
+
+    monthly_income.short_description = _("Monthly income")
+
     list_display = (
         "name",
-        "total_unit_groups",
         "office",
         "address",
-        "created_at",
+        "total_unit_groups",
+        "total_units",
+        "total_occupied_units",
+        "total_vacant_units",
+        "monthly_income",
         "updated_at",
     )
     search_fields = ("name", "address", "office__name")
@@ -50,12 +86,47 @@ class HouseAdmin(DevelopmentImportExportModelAdmin):
 
 @admin.register(UnitGroup)
 class UnitGroupAdmin(DevelopmentImportExportModelAdmin):
+    def total_occupied_units(cls, obj: Unit):
+        return obj.units.filter(
+            occupied_status=Unit.OccupiedStatus.OCCUPIED.value
+        ).count()
+
+    total_occupied_units.short_description = _("No. of occupied units")
+
+    def total_vacant_units(cls, obj: Unit):
+        return obj.units.filter(
+            occupied_status=Unit.OccupiedStatus.VACANT.value
+        ).count()
+
+    total_vacant_units.short_description = _("No. of vacant units")
+
+    def total_closed_units(cls, obj: Unit):
+        return obj.units.filter(
+            occupied_status=Unit.OccupiedStatus.CLOSED.value
+        ).count()
+
+    total_closed_units.short_description = _("No. of closed units")
+
+    def monthly_income(cl, obj: House):
+        net_income = (
+            obj.monthly_rent
+            * Unit.objects.filter(
+                unit_group=obj, occupied_status=Unit.OccupiedStatus.OCCUPIED.value
+            ).count()
+        )
+        return f"Ksh. {net_income:,}"
+
+    monthly_income.short_description = _("Monthly income")
+
     list_display = (
         "name",
         "house",
-        "number_of_units",
         "monthly_rent",
-        "created_at",
+        "number_of_units",
+        "total_occupied_units",
+        "total_vacant_units",
+        "total_closed_units",
+        "monthly_income",
         "updated_at",
     )
     search_fields = ("name", "house__name", "caretakers__username")
@@ -111,7 +182,6 @@ class UnitAdmin(DevelopmentImportExportModelAdmin):
         "unit_group",
         "tenant",
         "occupied_status",
-        "created_at",
         "updated_at",
     )
     search_fields = ("name", "abbreviated_name", "unit_group__name", "tenant__username")
@@ -143,7 +213,7 @@ class UnitAdmin(DevelopmentImportExportModelAdmin):
             {"fields": ("created_at", "updated_at"), "classes": ["tab"]},
         ),
     )
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("created_at", "tenant", "updated_at")
     ordering = ("-created_at",)
 
 
