@@ -223,11 +223,13 @@ class UnitGroup(models.Model):
 
     def model_dump(self):
         return dict(
+            id=self.id,
             house_id=self.house.id,
             name=self.name,
             abbreviated_name=self.abbreviated_name,
             description=self.description,
             number_of_units=self.number_of_units,
+            number_of_vacant_units=self.units.filter(occupied_status="Vacant").count(),
             picture=self.picture.name,
             monthly_rent=self.monthly_rent,
             caretakers_ids=[caretaker.id for caretaker in self.caretakers.all()],

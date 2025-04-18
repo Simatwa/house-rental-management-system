@@ -34,3 +34,9 @@ def send_email(subject: str, recipient: str, template_name: str, context: dict):
     return django_send_email(
         subject=subject, message="", recipient=recipient, html_message=email_body
     )
+
+
+def get_document_path(path: str | None):
+    if path and not path.startswith("/"):
+        return os.path.join(settings.MEDIA_URL, path)
+    return path

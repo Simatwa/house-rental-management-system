@@ -25,7 +25,7 @@ async def get_user(token: Annotated[str, Depends(v1_auth_scheme)]) -> CustomUser
             if token.startswith(token_id):
 
                 def fetch_user(token) -> CustomUser:
-                    return CustomUser.objects.get(token=token)
+                    return CustomUser.objects.select_related("account").get(token=token)
 
                 return await asyncio.to_thread(fetch_user, token)
 

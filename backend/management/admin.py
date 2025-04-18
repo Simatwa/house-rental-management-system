@@ -106,12 +106,12 @@ class PersonalMessageAdmin(DevelopmentImportExportModelAdmin):
     list_display = (
         "tenant",
         "category",
-        "title",
+        "subject",
         "is_read",
         "created_at",
         "updated_at",
     )
-    search_fields = ("tenant__username", "title", "content", "category")
+    search_fields = ("tenant__username", "subject", "content", "category")
     list_filter = ("category", "is_read", "created_at", "updated_at")
     fieldsets = (
         (
@@ -128,7 +128,7 @@ class PersonalMessageAdmin(DevelopmentImportExportModelAdmin):
             _("Message"),
             {
                 "fields": (
-                    "title",
+                    "subject",
                     "content",
                 ),
                 "classes": ["tab"],
@@ -145,8 +145,8 @@ class PersonalMessageAdmin(DevelopmentImportExportModelAdmin):
 
 @admin.register(CommunityMessage)
 class CommunityMessageAdmin(DevelopmentImportExportModelAdmin):
-    list_display = ("title", "category", "created_at", "updated_at")
-    search_fields = ("title", "category", "communities__name")
+    list_display = ("subject", "category", "created_at", "updated_at")
+    search_fields = ("subject", "category", "communities__name")
     list_filter = ("category", "created_at", "updated_at")
     filter_horizontal = ("communities",)
     fieldsets = (
@@ -163,7 +163,7 @@ class CommunityMessageAdmin(DevelopmentImportExportModelAdmin):
         (
             _("Message"),
             {
-                "fields": ("title", "content"),
+                "fields": ("subject", "content"),
                 "classes": ["tab"],
             },
         ),

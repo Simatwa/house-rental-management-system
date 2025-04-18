@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Path
 from fastapi.encoders import jsonable_encoder
 from external.models import About, Message, FAQ, ServiceFeedback, Gallery
+from rental.models import House, UnitGroup
 
 from api.v1.utils import send_email
 
@@ -12,7 +13,10 @@ from api.v1.business.models import (
     FAQDetails,
     ShallowUserInfo,
     UserFeedback,
+    HouseInfo,
+    UnitGroupInfo,
 )
+from typing import Annotated, List
 
 
 router = APIRouter(prefix="/business", tags=["Business"])
@@ -21,6 +25,21 @@ router = APIRouter(prefix="/business", tags=["Business"])
 @router.get("/about", name="Business information")
 def get_hospital_details() -> BusinessAbout:
     return jsonable_encoder(About.objects.all().first())
+
+
+# HOUSES INFO
+@router.get("/houses", name="Get houses available")
+def get_houses_available() -> List[HouseInfo]:
+    return [house.model_dump() for house in House.objects.order_by("-created_at").all()]
+
+
+@router.get("/unit-goup/{id}", name="Get house unit-group")
+def get_house_unit_groups(
+    id: Annotated[int, Path(description="House ID")]
+) -> List[UnitGroupInfo]:
+    """Get unit groups info of a particular house"""
+    unit_groups = UnitGroup.objects.filter(house__id=id).order_by("-created_at").all()
+    return [unit_group.model_dump() for unit_group in unit_groups]
 
 
 @router.post("/visitor-message", name="New visitor message")

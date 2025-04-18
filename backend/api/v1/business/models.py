@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, field_validator, Field, EmailStr, HttpUrl
 from external.models import ServiceFeedback
 from typing import Optional
 from datetime import date, datetime
-from rental_ms.settings import MEDIA_URL
+from api.v1.utils import get_document_path
 from os import path
 
 
@@ -26,9 +26,7 @@ class BusinessAbout(BaseModel):
 
     @field_validator("logo", "wallpaper")
     def validate_cover_photo(value):
-        if value and not value.startswith("/"):
-            return path.join(MEDIA_URL, value)
-        return value
+        return get_document_path(value)
 
     class Config:
         json_schema_extra = {
@@ -76,9 +74,7 @@ class ShallowUserInfo(BaseModel):
 
     @field_validator("profile")
     def validate_cover_photo(value):
-        if value and not value.startswith("/"):
-            return path.join(MEDIA_URL, value)
-        return value
+        return get_document_path(value)
 
     class Config:
         json_schema_extra = {
@@ -127,9 +123,7 @@ class BusinessGallery(BaseModel):
 
     @field_validator("picture")
     def validate_file(value):
-        if value and not value.startswith("/"):
-            return path.join(MEDIA_URL, value)
-        return value
+        return get_document_path(value)
 
     class Config:
         json_schema_extra = {
@@ -155,3 +149,30 @@ class FAQDetails(BaseModel):
                 "answer": "No. Tenant can only rent one unit.",
             }
         }
+
+
+class HouseInfo(BaseModel):
+    id: int
+    name: str
+    address: str
+    description: str
+    picture: str
+
+    @field_validator("picture")
+    def validate_picture(value):
+        return get_document_path(value)
+
+
+class UnitGroupInfo(BaseModel):
+    id: int
+    name: str
+    abbreviated_name: str
+    description: str
+    number_of_units: int
+    number_of_vacant_units: int
+    monthly_rent: int
+    picture: str
+
+    @field_validator("picture")
+    def validate_picture(value):
+        return get_document_path(value)

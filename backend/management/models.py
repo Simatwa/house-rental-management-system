@@ -200,11 +200,18 @@ class CommunityMessage(models.Model):
         verbose_name=_("Category"),
         help_text=_("Category of the message"),
     )
-    title = models.CharField(
-        max_length=200, verbose_name=_("Title"), help_text=_("Message title")
+    subject = models.CharField(
+        max_length=200, verbose_name=_("Subject"), help_text=_("Message subject")
     )
     content = RichTextField(
         verbose_name=_("Content"), help_text=_("Message in details")
+    )
+    read_by = models.ManyToManyField(
+        "rental.Tenant",
+        null=True,
+        blank=True,
+        verbose_name=_("Read by"),
+        help_text=_("Tenants who have read this message"),
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -216,6 +223,16 @@ class CommunityMessage(models.Model):
         verbose_name=_("Updated At"),
         help_text=_("Date and time when the message was last updated"),
     )
+
+    def model_dump(self):
+        return dict(
+            id=self.id,
+            community_names=[community.name for community in self.communities.all()],
+            category=self.category,
+            subject=self.subject,
+            content=self.content,
+            created_at=self.created_at,
+        )
 
     class Meta:
         verbose_name = _("Community Message")
@@ -241,8 +258,8 @@ class PersonalMessage(models.Model):
         verbose_name=_("Category"),
         help_text=_("Category of the message"),
     )
-    title = models.CharField(
-        max_length=200, verbose_name=_("Title"), help_text=_("Message title")
+    subject = models.CharField(
+        max_length=200, verbose_name=_("Subject"), help_text=_("Message subject")
     )
     content = RichTextField(
         verbose_name=_("Content"), help_text=_("Message in details")
