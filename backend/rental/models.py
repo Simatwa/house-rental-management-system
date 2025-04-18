@@ -291,6 +291,7 @@ class Unit(models.Model):
 
     def model_dump(self):
         return dict(
+            id=self.id,
             name=self.name,
             abbreviated_name=self.abbreviated_name,
             occupied_status=self.occupied_status,

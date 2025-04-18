@@ -199,12 +199,21 @@ class CommunityMessage(models.Model):
         default=MessageCategory.GENERAL.value,
         verbose_name=_("Category"),
         help_text=_("Category of the message"),
+        null=False,
+        blank=False,
     )
     subject = models.CharField(
-        max_length=200, verbose_name=_("Subject"), help_text=_("Message subject")
+        max_length=200,
+        verbose_name=_("Subject"),
+        help_text=_("Message subject"),
+        null=False,
+        blank=False,
     )
     content = RichTextField(
-        verbose_name=_("Content"), help_text=_("Message in details")
+        verbose_name=_("Content"),
+        help_text=_("Message in details"),
+        null=False,
+        blank=False,
     )
     read_by = models.ManyToManyField(
         "rental.Tenant",
@@ -239,7 +248,7 @@ class CommunityMessage(models.Model):
         verbose_name_plural = _("Community Messages")
 
     def __str__(self):
-        return f"{self.title} ({self.category})"
+        return f"{self.subject} ({self.category})"
 
 
 class PersonalMessage(models.Model):
@@ -259,10 +268,17 @@ class PersonalMessage(models.Model):
         help_text=_("Category of the message"),
     )
     subject = models.CharField(
-        max_length=200, verbose_name=_("Subject"), help_text=_("Message subject")
+        max_length=200,
+        verbose_name=_("Subject"),
+        help_text=_("Message subject"),
+        null=False,
+        blank=False,
     )
     content = RichTextField(
-        verbose_name=_("Content"), help_text=_("Message in details")
+        verbose_name=_("Content"),
+        help_text=_("Message in details"),
+        null=False,
+        blank=False,
     )
     is_read = models.BooleanField(
         verbose_name=_("Is read"), default=False, help_text=_("Message read status")
@@ -283,7 +299,7 @@ class PersonalMessage(models.Model):
         verbose_name_plural = _("Personal Messages")
 
     def __str__(self):
-        return f"{self.title} ({self.category}) - {self.tenant}"
+        return f"{self.subject} ({self.category}) - {self.tenant}"
 
 
 # TODO: Add warnings to tenants
