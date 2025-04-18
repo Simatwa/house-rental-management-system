@@ -1,5 +1,5 @@
 from django.contrib import admin
-from external.models import About, ServiceFeedback, Message, FAQ
+from external.models import About, ServiceFeedback, Message, Gallery, FAQ
 from django.utils.translation import gettext_lazy as _
 
 # from unfold.admin import ModelAdmin
@@ -118,3 +118,24 @@ class FAQAdmin(CustomImportExportModelAdmin):
         (_("Status & Date"), {"fields": ("is_shown", "created_at")}),
     )
     readonly_fields = ("created_at",)
+
+
+@admin.register(Gallery)
+class GalleryAdmin(DevelopmentImportExportModelAdmin):
+    list_display = ("title", "location_name", "date", "show_in_index", "updated_at")
+    list_filter = ("show_in_index", "date", "updated_at", "created_at")
+    search_fields = ("title", "details", "location_name")
+    list_editable = ("show_in_index",)
+    ordering = ("-date", "-created_at")
+    fieldsets = (
+        (None, {"fields": ("title", "details", "location_name")}),
+        (
+            _("Media"),
+            {"fields": ("picture", "youtube_video_link")},
+        ),
+        (
+            _("Status & Date"),
+            {"fields": ("show_in_index", "date", "updated_at", "created_at")},
+        ),
+    )
+    readonly_fields = ("updated_at", "created_at")

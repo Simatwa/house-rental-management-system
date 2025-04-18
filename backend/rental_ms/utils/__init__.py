@@ -15,6 +15,8 @@ url = "https://developer.safaricom.co.ke/api/v1/APIs/API/Simulate/MpesaExpressSi
 
 
 def send_payment_push(phone_number: str, amount: int, account_reference: str):
+    if settings.MPESA_AUTHORIZATION is None:
+        return
     if re.match(r"(^07|^011)", phone_number):
         phone_number = int(phone_number)
     elif re.match(r"^\+254", phone_number):

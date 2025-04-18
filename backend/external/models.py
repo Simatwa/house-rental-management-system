@@ -218,9 +218,10 @@ class Gallery(models.Model):
     picture = models.ImageField(
         help_text=_("Gallery photograph"),
         upload_to=generate_document_filepath,
-        default="default/surgery-1822458_1920.jpg",
+        null=True,
+        blank=True,
     )
-    video_link = models.URLField(
+    youtube_video_link = models.URLField(
         max_length=100, help_text=_("YouTube video link"), null=True, blank=True
     )
     date = models.DateField(help_text="Gallery date", default=timezone.now)

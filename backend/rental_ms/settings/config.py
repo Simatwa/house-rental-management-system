@@ -36,7 +36,7 @@ class EnvSettings(BaseModel):
     EMAIL_PORT: Optional[int] = 587
     EMAIL_USE_TLS: Optional[bool] = True
     EMAIL_HOST_USER: str
-    EMAIL_HOST_PASSWORD: str  # Your email password or app-specific password
+    EMAIL_HOST_PASSWORD: str = None  # Your email password or app-specific password
     DEFAULT_FROM_EMAIL: str = None  # Optional: default sender email
 
     # CORS

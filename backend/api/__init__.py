@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request, Response, Path as FPath
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "carwash_ms.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rental_ms.settings")
 import django
 
 django.setup()
@@ -28,12 +28,12 @@ api_module_path = Path(__file__).parent
 api_prefix = "/api"
 
 app = FastAPI(
-    title="Carwash-Management-System API",
+    title="House-Rental-Management-System API",
     version=api_module_path.joinpath("VERSION").read_text().strip(),
     description=api_module_path.joinpath("README.md").read_text(),
     license_info={
         "name": "GPLv3 License",
-        "url": "https://raw.githubusercontent.com/Simatwa/carwash-management-system/refs/heads/main/LICENSE",
+        "url": "https://raw.githubusercontent.com/Simatwa/house-rental-management-system/refs/heads/main/LICENSE",
     },
     docs_url="/api/docs",
     redoc_url="/api/redoc",
