@@ -7,11 +7,12 @@ from fastapi import (
     Depends,
     Query,
 )
+from fastapi.encoders import jsonable_encoder
 from fastapi.security.oauth2 import OAuth2PasswordRequestFormStrict
 from typing import Annotated
 
 from users.models import CustomUser, AuthToken
-from finance.models import Account
+from finance.models import Account, Transaction
 from rental_ms.utils import get_expiry_datetime
 
 from api.v1.utils import send_email, get_value
@@ -23,6 +24,7 @@ from api.v1.account.models import (
     ResetPassword,
     UserProfile,
     EditablePersonalData,
+    TransactionInfo,
     PaymentAccountDetails,
     SendMPESAPopupTo,
 )
@@ -107,7 +109,30 @@ def check_if_username_exists(
         return ProcessFeedback(detail=False)
 
 
-@router.get("/transactions", name="Money transaction affecting user account")
+@router.get("/transactions", name="Financial transactions")
+def get_financial_transactions(
+    user: Annotated[CustomUser, Depends(get_user)],
+    means: Annotated[
+        Transaction.TransactionMeans, Query(description="Transaction means")
+    ] = None,
+    type: Annotated[
+        Transaction.TransactionType, Query(description="Transaction type")
+    ] = None,
+) -> list[TransactionInfo]:
+    """Get complete financial transactions"""
+    search_filter = dict(user=user)
+    if means is not None:
+        search_filter["means"] = means.value
+    if type is not None:
+        search_filter["type"] = type.value
+    return [
+        jsonable_encoder(transaction)
+        for transaction in Transaction.objects.filter(**search_filter)
+        .order_by("-created_at")
+        .all()[:15]
+    ]
+
+
 @router.get("/mpesa-payment-account-details", name="Get mpesa payment account details")
 def get_mpesa_payment_account_details(
     user: Annotated[CustomUser, Depends(get_user)]

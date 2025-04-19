@@ -82,7 +82,7 @@ class Transaction(models.Model):
         verbose_name=_("User"),
         on_delete=models.CASCADE,
         help_text=_("User account to deposit to."),
-        related_name="payments",
+        related_name="transactions",
     )
     type = models.CharField(
         max_length=30,

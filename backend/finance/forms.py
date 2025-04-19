@@ -1,5 +1,6 @@
 from finance.models import Transaction
 from django import forms
+import re
 
 
 class TransactionForm(forms.ModelForm):
@@ -20,6 +21,11 @@ class TransactionForm(forms.ModelForm):
                 if reference == "--":
                     raise forms.ValidationError(
                         "Reference cannot be '--' if means is not Cash."
+                    )
+                if re.match(r"[\w\d_-]{4,}", reference) is None:
+                    raise forms.ValidationError(
+                        "Reference must be at least 4 characters long containing"
+                        " alphanumeric, underscore and hyphen."
                     )
             else:
                 raise forms.ValidationError("Reference is required.")

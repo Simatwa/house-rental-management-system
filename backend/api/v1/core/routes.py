@@ -1,4 +1,4 @@
-"""User routes"""
+"""Core routes"""
 
 from fastapi import (
     APIRouter,
@@ -14,6 +14,7 @@ from api.v1.account.utils import get_user
 from users.models import CustomUser
 from rental.models import Tenant, Unit
 from management.models import CommunityMessage, GroupMessage, PersonalMessage, Concern
+from external.models import ServiceFeedback
 
 from api.v1.models import ProcessFeedback
 from api.v1.core.models import (
@@ -26,13 +27,17 @@ from api.v1.core.models import (
     NewConcern,
     ConcernDetails,
     UpdateConcern,
+    NewTenantFeedback,
+    TenantFeedbackDetails,
 )
+
+from django.db.utils import IntegrityError
 
 from typing import Annotated, List
 from fastapi.encoders import jsonable_encoder
 import asyncio
 
-router = APIRouter(prefix="/user", tags=["Core"])
+router = APIRouter(prefix="/core", tags=["Core"])
 
 
 async def get_tenant(user: Annotated[CustomUser, Depends(get_user)]) -> Tenant:
@@ -56,6 +61,7 @@ async def get_tenant(user: Annotated[CustomUser, Depends(get_user)]) -> Tenant:
 
 @router.get("/house", name="Get house info")
 def get_house_info(tenant: Annotated[Tenant, Depends(get_tenant)]) -> HouseInfoPrivate:
+    """Get tenant's house information"""
     house = tenant.unit.unit_group.house
     house_info_dict = jsonable_encoder(house)
     house_info_dict["communities"] = [
@@ -245,7 +251,7 @@ def add_new_concern(
     new_concern_dict["tenant"] = tenant
     new_concern = Concern.objects.create(**new_concern_dict)
     new_concern.save()
-    new_concern.refresh_from_db()
+    # new_concern.refresh_from_db()
     return jsonable_encoder(new_concern)
 
 
@@ -306,4 +312,71 @@ def get_concern_details(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Concern with id {id} does not exist.",
+        )
+
+
+@router.post("/feedback", name="New feedback")
+def add_new_feedback(
+    tenant: Annotated[Tenant, Depends(get_tenant)], feedback: NewTenantFeedback
+) -> TenantFeedbackDetails:
+    try:
+        new_feedback = ServiceFeedback.objects.create(
+            sender=tenant.user, message=feedback.message, rate=feedback.rate.value
+        )
+        new_feedback.save()
+        return new_feedback.model_dump()
+    except IntegrityError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You already have an existing feedback. Consider updating it instead.",
+        )
+
+
+@router.patch("/feedback", name="Update feedback")
+def update_feedback(
+    tenant: Annotated[Tenant, Depends(get_tenant)],
+    feedback: NewTenantFeedback,
+) -> TenantFeedbackDetails:
+    """Update user service-feedback"""
+    try:
+        target_feedback = ServiceFeedback.objects.get(sender=tenant.user)
+        target_feedback.message = get_value(feedback.message, target_feedback.message)
+        target_feedback.rate = get_value(feedback.rate.value, target_feedback.rate)
+        target_feedback.save()
+        return target_feedback.model_dump()
+    except ServiceFeedback.DoesNotExist:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"You have not send a feedback yet.",
+        )
+
+
+@router.get("/feedback", name="Get feedback details")
+def get_feedback_details(
+    tenant: Annotated[Tenant, Depends(get_tenant)],
+) -> TenantFeedbackDetails:
+    """Get user service-feedback"""
+    try:
+        target_feedback = ServiceFeedback.objects.get(sender=tenant.user)
+        return target_feedback.model_dump()
+    except ServiceFeedback.DoesNotExist:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"You have not send a feedback yet.",
+        )
+
+
+@router.delete("/feedback", name="Delete feedback")
+def delete_feedback(
+    tenant: Annotated[Tenant, Depends(get_tenant)],
+) -> ProcessFeedback:
+    """Delete user feedback"""
+    try:
+        target_feedback = ServiceFeedback.objects.get(sender=tenant.user)
+        target_feedback.delete()
+        return ProcessFeedback(detail="Feedback deleted successfully.")
+    except ServiceFeedback.DoesNotExist:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"You have not send a feedback yet.",
         )

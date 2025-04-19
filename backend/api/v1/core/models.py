@@ -2,6 +2,7 @@ from pydantic import BaseModel, field_validator, HttpUrl
 from typing import Optional, List
 from management.models import CommunityMessage, Concern
 from rental.models import Unit
+from external.models import ServiceFeedback
 from api.v1.utils import get_document_path
 from datetime import datetime
 
@@ -223,3 +224,13 @@ class ConcernDetails(ShallowConcernDetails):
 class UpdateConcern(BaseModel):
     about: Optional[str] = None
     details: Optional[str] = None
+
+
+class NewTenantFeedback(BaseModel):
+    message: str
+    rate: ServiceFeedback.FeedbackRate
+
+
+class TenantFeedbackDetails(NewTenantFeedback):
+    created_at: datetime
+    updated_at: datetime

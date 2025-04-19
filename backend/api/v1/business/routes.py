@@ -58,7 +58,7 @@ def new_visitor_message(message: NewVisitorMessage) -> ProcessFeedback:
 
 
 @router.get("/galleries", name="Business galleries")
-def get_hospital_galleries() -> list[BusinessGallery]:
+def get_business_galleries() -> list[BusinessGallery]:
     return [
         jsonable_encoder(gallery)
         for gallery in Gallery.objects.filter(show_in_index=True)

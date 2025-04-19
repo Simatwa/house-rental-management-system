@@ -1,6 +1,7 @@
 from pydantic import BaseModel, field_validator
 from typing import Optional
 from users.models import CustomUser
+from finance.models import Transaction
 from rental_ms import settings
 from datetime import datetime
 import re
@@ -106,6 +107,15 @@ class UserProfile(EditablePersonalData):
                 "date_joined": "2023-01-01T00:00:00",
             }
         }
+
+
+class TransactionInfo(BaseModel):
+    type: Transaction.TransactionType
+    amount: float
+    means: Transaction.TransactionMeans
+    reference: str
+    notes: Optional[str] = None
+    created_at: datetime
 
 
 class PaymentAccountDetails(BaseModel):

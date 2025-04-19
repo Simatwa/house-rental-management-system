@@ -163,6 +163,16 @@ class ServiceFeedback(models.Model):
         help_text=_("Date and time when the entry was created"),
     )
 
+    def model_dump(self):
+        return dict(
+            id=self.id,
+            message=self.message,
+            rate=self.rate,
+            sender_role=self.sender_role,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+        )
+
     class Meta:
         verbose_name = _("Feedback")
         verbose_name_plural = _("Feedbacks")
