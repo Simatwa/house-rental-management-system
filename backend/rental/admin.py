@@ -183,13 +183,20 @@ class UnitAdmin(DevelopmentImportExportModelAdmin):
     list_display = (
         "name",
         "abbreviated_name",
-        "unit_group",
+        "unit_group__name",
+        "unit_group__house__name",
         "tenant",
         "occupied_status",
         "updated_at",
     )
     search_fields = ("name", "abbreviated_name", "unit_group__name", "tenant__username")
-    list_filter = ("occupied_status", "created_at", "updated_at", "unit_group")
+    list_filter = (
+        "occupied_status",
+        "unit_group",
+        "unit_group__house",
+        "updated_at",
+        "created_at",
+    )
     fieldsets = (
         (
             None,

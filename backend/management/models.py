@@ -251,6 +251,71 @@ class CommunityMessage(models.Model):
         return f"{self.subject} ({self.category})"
 
 
+class GroupMessage(models.Model):
+    groups = models.ManyToManyField(
+        "rental.UnitGroup",
+        verbose_name=_("Groups"),
+        help_text=_("Group of units that receive this message"),
+        related_name="group_messages",
+    )
+
+    category = models.CharField(
+        max_length=20,
+        choices=CommunityMessage.MessageCategory.choices(),
+        default=CommunityMessage.MessageCategory.GENERAL.value,
+        verbose_name=_("Category"),
+        help_text=_("Category of the message"),
+        null=False,
+        blank=False,
+    )
+    subject = models.CharField(
+        max_length=200,
+        verbose_name=_("Subject"),
+        help_text=_("Message subject"),
+        null=False,
+        blank=False,
+    )
+    content = RichTextField(
+        verbose_name=_("Content"),
+        help_text=_("Message in details"),
+        null=False,
+        blank=False,
+    )
+    read_by = models.ManyToManyField(
+        "rental.Tenant",
+        null=True,
+        blank=True,
+        verbose_name=_("Read by"),
+        help_text=_("Tenants who have read this message"),
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Created At"),
+        help_text=_("Date and time when the message was created"),
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("Updated At"),
+        help_text=_("Date and time when the message was last updated"),
+    )
+
+    def model_dump(self):
+        return dict(
+            id=self.id,
+            category=self.category,
+            subject=self.subject,
+            content=self.content,
+            created_at=self.created_at,
+        )
+
+    class Meta:
+        verbose_name = _("Group Message")
+        verbose_name_plural = _("Group Messages")
+
+    def __str__(self):
+        return f"{self.subject} ({self.category})"
+
+
 class PersonalMessage(models.Model):
 
     tenant = models.ForeignKey(

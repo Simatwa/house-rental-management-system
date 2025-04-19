@@ -198,7 +198,7 @@ class UnitGroup(models.Model):
         verbose_name_plural = _("Unit Groups")
 
     def __str__(self):
-        return f"{self.name} ({self.abbreviated_name})"
+        return f"{self.house.name} - {self.name} ({self.abbreviated_name})"
 
     def generate_unit_name(self, unit_number: int):
         return self.unit_name_format % dict(

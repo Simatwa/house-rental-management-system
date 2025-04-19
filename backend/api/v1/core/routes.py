@@ -13,13 +13,14 @@ from api.v1.account.utils import get_user
 
 from users.models import CustomUser
 from rental.models import Tenant, Unit
-from management.models import CommunityMessage, PersonalMessage, Concern
+from management.models import CommunityMessage, GroupMessage, PersonalMessage, Concern
 
 from api.v1.models import ProcessFeedback
 from api.v1.core.models import (
     UnitInfo,
     HouseInfoPrivate,
     PersonalMessageInfo,
+    GroupMessageInfo,
     CommunityMessageInfo,
     ShallowConcernDetails,
     NewConcern,
@@ -105,14 +106,56 @@ def mark_personal_message_read(
 ) -> ProcessFeedback:
     """Mark a personal message as read"""
     try:
-        message = PersonalMessage.objects.get(id=id, tenant=tenant)
-        message.is_read = True
-        message.save()
+        PersonalMessage.objects.filter(id=id, tenant=tenant).update(is_read=True)
         return ProcessFeedback(detail="Message marked as read successfully")
     except PersonalMessage.DoesNotExist:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Message with id {id} does not exist.",
+        )
+
+
+@router.get("/group/messages", name="Get group messages")
+def get_group_messages(
+    tenant: Annotated[Tenant, Depends(get_tenant)],
+    is_read: Annotated[bool, Query(description="Is read filter")] = None,
+) -> List[GroupMessageInfo]:
+    """Messages from unit group that tenant is a member"""
+    message_list = []
+    search_filter = dict(groups__in=[tenant.unit.unit_group])
+    if is_read is not None:
+        if is_read:
+            search_filter["read_by"] = tenant
+        elif is_read is False:
+            search_filter["read_by__isnull"] = True
+
+    for message in (
+        GroupMessage.objects.prefetch_related("read_by")
+        .filter(**search_filter)
+        .order_by("-created_at")
+        .all()[:30]
+    ):
+        message_dict = message.model_dump()
+        message_dict["is_read"] = message.read_by.contains(tenant)
+        message_list.append(message_dict)
+    return message_list
+
+
+@router.patch("/group/message/mark-read/{id}", name="Mark group message as read")
+def mark_group_message_read(
+    id: Annotated[int, Path(description="Group message ID")],
+    tenant: Annotated[Tenant, Depends(get_tenant)],
+) -> ProcessFeedback:
+    """Mark a particular group message as read"""
+    try:
+        GroupMessage.objects.prefetch_related("read_by").get(
+            id=id, groups__in=[tenant.unit.unit_group]
+        ).read_by.add(tenant)
+        return ProcessFeedback(detail="Message marked as read successfully.")
+    except GroupMessage.DoesNotExist:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Community message with id {id} does not exist.",
         )
 
 
@@ -133,7 +176,7 @@ def get_community_messages(
             search_filter["read_by__isnull"] = True
 
     for message in (
-        CommunityMessage.objects.prefetch_related("communities")
+        CommunityMessage.objects.prefetch_related("communities", "read_by")
         .filter(**search_filter)
         .order_by("-created_at")
         .distinct()

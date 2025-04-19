@@ -240,6 +240,7 @@ JAZZMIN_SETTINGS = {
         "management.Concern": "fas fa-exclamation-circle",
         "management.Community": "fas fa-users",
         "management.CommunityMessage": "fas fa-comments",
+        "management.GroupMessage": "fas fa-comments",
         "management.PersonalMessage": "fas fa-envelope-open-text",
         "management.AppUtility": "fas fa-tools",
         "rental.House": "fas fa-home",

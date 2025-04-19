@@ -3,7 +3,6 @@ from django.contrib import admin
 # Register your models here.
 from finance.models import Account, UserAccount, Transaction, ExtraFee
 from finance.forms import TransactionForm
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rental_ms.utils.admin import DevelopmentImportExportModelAdmin
 

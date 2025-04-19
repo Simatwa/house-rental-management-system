@@ -4,11 +4,13 @@ from management.models import (
     Concern,
     Community,
     CommunityMessage,
+    GroupMessage,
     PersonalMessage,
     AppUtility,
 )
 from rental_ms.utils.admin import DevelopmentImportExportModelAdmin
 from django.utils.translation import gettext_lazy as _
+from management.forms import AppUtilityForm
 
 # Register your models here.
 
@@ -102,6 +104,39 @@ class CommunityAdmin(DevelopmentImportExportModelAdmin):
     ordering = ("-created_at",)
 
 
+@admin.register(GroupMessage)
+class GroupMessageAdmin(DevelopmentImportExportModelAdmin):
+    list_display = ("subject", "category", "created_at", "updated_at")
+    search_fields = ("subject", "category", "groups__name")
+    list_filter = ("category", "groups", "created_at", "updated_at")
+    filter_horizontal = ("groups",)
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "category",
+                    "groups",
+                ),
+                "classes": ["tab"],
+            },
+        ),
+        (
+            _("Message"),
+            {
+                "fields": ("subject", "content"),
+                "classes": ["tab"],
+            },
+        ),
+        (
+            _("Timestamps"),
+            {"fields": ("created_at", "updated_at"), "classes": ["tab"]},
+        ),
+    )
+    readonly_fields = ("created_at", "updated_at")
+    ordering = ("-created_at",)
+
+
 @admin.register(PersonalMessage)
 class PersonalMessageAdmin(DevelopmentImportExportModelAdmin):
     list_display = (
@@ -179,6 +214,7 @@ class CommunityMessageAdmin(DevelopmentImportExportModelAdmin):
 
 @admin.register(AppUtility)
 class AppUtilityAdmin(DevelopmentImportExportModelAdmin):
+    form = AppUtilityForm
     list_display = ("name", "value", "updated_at", "created_at")
     search_fields = ("name", "details")
     ordering = ("-updated_at",)

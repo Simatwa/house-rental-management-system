@@ -167,6 +167,10 @@ class PersonalMessageInfo(BaseModel):
         }
 
 
+class GroupMessageInfo(PersonalMessageInfo):
+    pass
+
+
 class CommunityMessageInfo(PersonalMessageInfo):
     community_names: List[str]
 
