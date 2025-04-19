@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field, field_validator, Field, EmailStr, HttpUrl
 from external.models import ServiceFeedback
+from management.models import AppUtility
 from typing import Optional
 from datetime import date, datetime
 from api.v1.utils import get_document_path
-from os import path
 
 
 class BusinessAbout(BaseModel):
@@ -170,9 +170,25 @@ class UnitGroupInfo(BaseModel):
     description: str
     number_of_units: int
     number_of_vacant_units: int
-    monthly_rent: int
+    deposit_amount: float
+    monthly_rent: float
     picture: str
 
     @field_validator("picture")
     def validate_picture(value):
         return get_document_path(value)
+
+
+class AppUtilityInfo(BaseModel):
+    name: AppUtility.UtilityName
+    description: str
+    value: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "Currency",
+                "description": "<p>Transaction Currency</p>",
+                "value": "$",
+            }
+        }

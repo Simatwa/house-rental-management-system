@@ -5,6 +5,7 @@ from management.models import (
     Community,
     CommunityMessage,
     PersonalMessage,
+    AppUtility,
 )
 from rental_ms.utils.admin import DevelopmentImportExportModelAdmin
 from django.utils.translation import gettext_lazy as _
@@ -174,3 +175,15 @@ class CommunityMessageAdmin(DevelopmentImportExportModelAdmin):
     )
     readonly_fields = ("created_at", "updated_at")
     ordering = ("-created_at",)
+
+
+@admin.register(AppUtility)
+class AppUtilityAdmin(DevelopmentImportExportModelAdmin):
+    list_display = ("name", "value", "updated_at", "created_at")
+    search_fields = ("name", "details")
+    ordering = ("-updated_at",)
+    fieldsets = (
+        (None, {"fields": ("name", "description", "value")}),
+        (_("Timestamps"), {"fields": ("updated_at", "created_at")}),
+    )
+    readonly_fields = ("updated_at", "created_at")

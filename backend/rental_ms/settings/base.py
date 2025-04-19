@@ -236,6 +236,7 @@ JAZZMIN_SETTINGS = {
         "management.Community": "fas fa-users",
         "management.CommunityMessage": "fas fa-comments",
         "management.PersonalMessage": "fas fa-envelope-open-text",
+        "management.AppUtility": "fas fa-tools",
         "rental.House": "fas fa-home",
         "rental.UnitGroup": "fas fa-building",
         "rental.Unit": "fas fa-door-open",

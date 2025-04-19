@@ -69,8 +69,8 @@ class Office(models.Model):
     )
 
     class Meta:
-        verbose_name = _("Office")
-        verbose_name_plural = _("Offices")
+        verbose_name = _("House Office")
+        verbose_name_plural = _("House Offices")
 
     def __str__(self):
         return self.name
@@ -132,8 +132,8 @@ class Concern(models.Model):
     )
 
     class Meta:
-        verbose_name = _("Concern")
-        verbose_name_plural = _("Concerns")
+        verbose_name = _("Tenant Concern")
+        verbose_name_plural = _("Tenant Concerns")
 
     def __str__(self):
         return f"{self.about} - {self.tenant} - {self.status}"
@@ -302,4 +302,50 @@ class PersonalMessage(models.Model):
         return f"{self.subject} ({self.category}) - {self.tenant}"
 
 
-# TODO: Add warnings to tenants
+class AppUtility(models.Model):
+    """Utility data for the application such currency"""
+
+    class UtilityName(EnumWithChoices):
+        CURRENCY = "Currency"
+        RENT_PAYMENT_START_DATE = "Rent Payment Start Date"
+        RENT_PAYMENT_END_DATE = "Rent Payment End Date"
+        RENT_PAYMENT_DATE_REMINDER = "Rent Payment Date Reminder"
+
+    name = models.CharField(
+        max_length=30,
+        verbose_name=_("Name"),
+        choices=UtilityName.choices(),
+        help_text=_("Name of this utility"),
+        null=False,
+        blank=False,
+    )
+    description = RichTextField(
+        verbose_name=_("Description"),
+        help_text=_("Description of this app utility"),
+        null=False,
+        blank=False,
+    )
+    value = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        verbose_name=_("Value"),
+        help_text=_("Value for this utility"),
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("updated at"),
+        help_text=_("Date and time when the entry was updated"),
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("created at"),
+        help_text=_("Date and time when the entry was created"),
+    )
+
+    def __str__(self):
+        return f"{self.name} - {self.value}"
+
+    class Meta:
+        verbose_name = _("App Utility")
+        verbose_name_plural = _("App Utilities")

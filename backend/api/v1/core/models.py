@@ -23,6 +23,8 @@ class UnitGroupInfoPrivate(BaseModel):
     name: str
     abbreviated_name: str
     description: str
+    deposit_amount: float
+    monthly_rent: float
     picture: str
     caretakers: List[Caretaker]
 
@@ -50,6 +52,8 @@ class UnitInfo(BaseModel):
                     "name": "Attic",
                     "abbreviated_name": "ATTIC",
                     "description": "",
+                    "deposit_amount": 0,
+                    "monthly_rent": 4500,
                     "picture": "/media/default/house-7124141_1920.jpg",
                     "caretakers": [
                         {

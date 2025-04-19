@@ -145,15 +145,19 @@ class UnitGroupAdmin(DevelopmentImportExportModelAdmin):
             },
         ),
         (
-            _("Units, Rent & Media"),
+            _("Units & Payments"),
             {
-                "fields": ("number_of_units", "monthly_rent", "picture"),
+                "fields": (
+                    "number_of_units",
+                    "monthly_rent",
+                    "deposit_amount",
+                ),
                 "classes": ["tab"],
             },
         ),
         (
-            _("Caretakers"),
-            {"fields": ("caretakers",), "classes": ["tab"]},
+            _("Caretakers & Media"),
+            {"fields": ("caretakers", "picture"), "classes": ["tab"]},
         ),
         (
             _("Unit Name Formats"),

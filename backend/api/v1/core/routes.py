@@ -160,12 +160,12 @@ def mark_community_message_read(
                 id=id, communities__in=tenant.unit.unit_group.house.communities.all()
             )
             .distinct()
+            .first()
         )
         if not message:
             raise CommunityMessage.DoesNotExist()
-        target_message = message[0]
-        target_message.read_by.add(tenant)
-        target_message.save()
+        message.read_by.add(tenant)
+        message.save()
         return ProcessFeedback(detail="Message marked as read successfully.")
     except CommunityMessage.DoesNotExist:
         raise HTTPException(

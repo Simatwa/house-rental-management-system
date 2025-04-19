@@ -104,11 +104,39 @@ def check_if_username_exists(
         return ProcessFeedback(detail=False)
 
 
-@router.get("/payment-account-details", name="Get payment account details")
+@router.get("/mpesa-payment-account-details", name="Get mpesa payment account details")
+def get_mpesa_payment_account_details(
+    user: Annotated[CustomUser, Depends(get_user)]
+) -> PaymentAccountDetails:
+    """Get mpesa payment account details specifically for current user"""
+    try:
+        account = Account.objects.get(
+            Q(name__icontains="m-pesa") | Q(name__icontains="mpesa")
+        )
+        return PaymentAccountDetails(
+            name=account.name,
+            paybill_number=account.paybill_number,
+            account_number=account.account_number
+            % dict(
+                id=user.id,
+                username=user.username,
+                phone_number=user.phone_number,
+                email=user.email,
+            ),
+            details=account.details,
+        )
+    except Account.DoesNotExist:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="M-PESA Payment account details is currently not available.",
+        )
+
+
+@router.get("/other-payment-account-details", name="Get other payment account details")
 def get_payment_account_details(
     user: Annotated[CustomUser, Depends(get_user)]
 ) -> list[PaymentAccountDetails]:
-    """Get payment account details"""
+    """Get other payment account details such as bank etc."""
     return [
         PaymentAccountDetails(
             name=account.name,
@@ -122,7 +150,9 @@ def get_payment_account_details(
             ),
             details=account.details,
         )
-        for account in Account.objects.filter(is_active=True).all()
+        for account in Account.objects.filter(is_active=True)
+        .exclude(Q(name__icontains="m-pesa") | Q(name__icontains="mpesa"))
+        .all()
     ]
 
 

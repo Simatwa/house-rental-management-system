@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Path
+from fastapi import APIRouter, Path, Query
 from fastapi.encoders import jsonable_encoder
 from external.models import About, Message, FAQ, ServiceFeedback, Gallery
 from rental.models import House, UnitGroup
+from management.models import AppUtility
 
 from api.v1.utils import send_email
 
@@ -15,8 +16,9 @@ from api.v1.business.models import (
     UserFeedback,
     HouseInfo,
     UnitGroupInfo,
+    AppUtilityInfo,
 )
-from typing import Annotated, List
+from typing import Annotated
 
 
 router = APIRouter(prefix="/business", tags=["Business"])
@@ -29,14 +31,14 @@ def get_hospital_details() -> BusinessAbout:
 
 # HOUSES INFO
 @router.get("/houses", name="Get houses available")
-def get_houses_available() -> List[HouseInfo]:
+def get_houses_available() -> list[HouseInfo]:
     return [house.model_dump() for house in House.objects.order_by("-created_at").all()]
 
 
 @router.get("/unit-goup/{id}", name="Get house unit-group")
 def get_house_unit_groups(
     id: Annotated[int, Path(description="House ID")]
-) -> List[UnitGroupInfo]:
+) -> list[UnitGroupInfo]:
     """Get unit groups info of a particular house"""
     unit_groups = UnitGroup.objects.filter(house__id=id).order_by("-created_at").all()
     return [unit_group.model_dump() for unit_group in unit_groups]
@@ -87,4 +89,18 @@ def get_faqs() -> list[FAQDetails]:
     return [
         FAQDetails(**jsonable_encoder(faq))
         for faq in FAQ.objects.filter(is_shown=True).order_by("created_at").all()[:10]
+    ]
+
+
+@router.get("/app/utilities", name="App utilities")
+def get_app_utilities(
+    name: Annotated[AppUtility.UtilityName, Query(description="Name filter")] = None
+) -> list[AppUtilityInfo]:
+    """Get app utilities such as currency etc"""
+    search_filter = dict()
+    if name is not None:
+        search_filter["name"] = name.value
+    return [
+        jsonable_encoder(utility)
+        for utility in AppUtility.objects.filter(**search_filter).all()
     ]

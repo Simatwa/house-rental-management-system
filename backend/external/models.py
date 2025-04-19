@@ -208,6 +208,10 @@ class FAQ(models.Model):
     def __str__(self):
         return self.question
 
+    class Meta:
+        verbose_name = _("FAQ")
+        verbose_name_plural = _("FAQs")
+
 
 class Gallery(models.Model):
     title = models.CharField(max_length=50, help_text=_("Gallery title"))
@@ -243,4 +247,5 @@ class Gallery(models.Model):
         return f"{self.title} in {self.location_name} on {self.date}"
 
     class Meta:
+        verbose_name = _("Gallery")
         verbose_name_plural = _("Galleries")

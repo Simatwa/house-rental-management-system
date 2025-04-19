@@ -127,6 +127,17 @@ class UnitGroup(models.Model):
         decimal_places=2,
         verbose_name=_("Monthly Rent"),
         help_text=_("Monthly rent amount for the units"),
+        null=False,
+        blank=False,
+    )
+    deposit_amount = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        verbose_name=_("Deposit amount"),
+        help_text=_("Initial amount tenants have to pay."),
+        default=0,
+        null=False,
+        blank=False,
     )
     caretakers = models.ManyToManyField(
         CustomUser,
@@ -231,6 +242,7 @@ class UnitGroup(models.Model):
             number_of_units=self.number_of_units,
             number_of_vacant_units=self.units.filter(occupied_status="Vacant").count(),
             picture=self.picture.name,
+            deposit_amount=self.deposit_amount,
             monthly_rent=self.monthly_rent,
             caretakers_ids=[caretaker.id for caretaker in self.caretakers.all()],
         )
