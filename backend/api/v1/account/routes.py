@@ -84,6 +84,9 @@ def update_personal_info(
     user.first_name = get_value(updated_personal_data.first_name, user.first_name)
     user.last_name = get_value(updated_personal_data.last_name, user.last_name)
     user.phone_number = get_value(updated_personal_data.phone_number, user.phone_number)
+    user.emergency_contact_number = get_value(
+        updated_personal_data.emergency_contact_number, user.emergency_contact_number
+    )
     user.email = get_value(updated_personal_data.email, user.email)
     user.occupation = get_value(updated_personal_data.occupation, user.occupation)
     user.save()
@@ -104,6 +107,7 @@ def check_if_username_exists(
         return ProcessFeedback(detail=False)
 
 
+@router.get("/transactions", name="Money transaction affecting user account")
 @router.get("/mpesa-payment-account-details", name="Get mpesa payment account details")
 def get_mpesa_payment_account_details(
     user: Annotated[CustomUser, Depends(get_user)]

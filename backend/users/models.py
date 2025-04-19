@@ -19,7 +19,6 @@ def generate_profile_filepath(instance: "CustomUser", filename: str) -> str:
 
 
 class CustomUser(AbstractUser):
-    """Both indiduals and organizations"""
 
     class UserGender(EnumWithChoices):
         MALE = "M"
@@ -48,6 +47,7 @@ class CustomUser(AbstractUser):
 
     phone_number = models.CharField(
         max_length=15,
+        verbose_name=_("Phone number"),
         validators=[
             RegexValidator(
                 regex=r"^\+?1?\d{9,15}$",
@@ -57,6 +57,21 @@ class CustomUser(AbstractUser):
             )
         ],
         help_text=_("Contact phone number"),
+        blank=False,
+        null=False,
+    )
+    emergency_contact_number = models.CharField(
+        max_length=15,
+        verbose_name=_("Emergency contact number"),
+        validators=[
+            RegexValidator(
+                regex=r"^\+?1?\d{9,15}$",
+                message=_(
+                    "Phone number must be entered in the format: '+254...' or '07...'. Up to 15 digits allowed."
+                ),
+            )
+        ],
+        help_text=_("Emergency contact number"),
         blank=True,
         null=True,
     )
@@ -114,6 +129,7 @@ class CustomUser(AbstractUser):
             identity_number=self.identity_number,
             occupation=self.occupation,
             phone_number=self.phone_number,
+            emergency_contact_number=self.emergency_contact_number,
             email=self.email,
             username=self.username,
             account_balance=self.account.balance,

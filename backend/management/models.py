@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from rental_ms.utils import EnumWithChoices
 from ckeditor.fields import RichTextField
 
-
 # Create your models here.
 
 
@@ -183,6 +182,7 @@ class CommunityMessage(models.Model):
         GENERAL = "General"
         PAYMENT = "Payment"
         MAINTENANCE = "Maintenance"
+        PROMOTION = "Promotion"
         WARNING = "Warning"
         OTHER = "Other"
 

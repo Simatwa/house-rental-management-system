@@ -49,5 +49,8 @@ class EnvSettings(BaseModel):
     MPESA_AUTHORIZATION: Optional[str] = None
     MPESA_PASSWORD: Optional[str] = None
 
+    # UTILS
+    CURRENCY: Optional[str] = "Ksh"
+
 
 env_setting = EnvSettings(**Envist().get_all())

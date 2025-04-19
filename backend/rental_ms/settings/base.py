@@ -195,6 +195,11 @@ SITE_NAME = env_setting.SITE_NAME
 SITE_ADDRESS = env_setting.SITE_ADDRESS
 
 
+# UTILS
+
+CURRENCY = env_setting.CURRENCY
+"""Transaction currency"""
+
 # ADMIN
 JAZZMIN_SETTINGS = {
     "show_ui_builder": env_setting.DEBUG,
@@ -227,7 +232,7 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.Group": "fas fa-users",
         "users.CustomUser": "fas fa-user",
-        "finance.Payment": "fas fa-money-bill-wave",
+        "finance.Transaction": "fas fa-money-check-alt",
         "finance.UserAccount": "fas fa-wallet",
         "finance.Account": "fas fa-file-invoice-dollar",
         "finance.ExtraFee": "fas fa-coins",

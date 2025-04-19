@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from finance.models import Account, UserAccount, Payment, ExtraFee
+from finance.models import Account, UserAccount, Transaction, ExtraFee
+from finance.forms import TransactionForm
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rental_ms.utils.admin import DevelopmentImportExportModelAdmin
@@ -41,18 +42,61 @@ class UserAccountAdmin(DevelopmentImportExportModelAdmin):
         return False
 
 
-@admin.register(Payment)
-class PaymentAdmin(DevelopmentImportExportModelAdmin):
-    list_display = ("user", "amount", "method", "reference", "created_at")
-    search_fields = ("user", "reference", "method")
-    list_filter = ("user", "method", "created_at")
+@admin.register(Transaction)
+class TransactionAdmin(DevelopmentImportExportModelAdmin):
+    form = TransactionForm
+    list_display = (
+        "user",
+        "type",
+        "amount",
+        "means",
+        "reference",
+        "created_at",
+    )
+    search_fields = ("user__username", "reference", "type")
+    list_filter = ("type", "means", "created_at")
     ordering = ("-created_at",)
-    list_editable = ()
 
-    def has_change_permission(self, request, obj=...):
-        return False
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "user",
+                    "type",
+                ),
+            },
+        ),
+        (
+            _("Details"),
+            {
+                "fields": (
+                    "amount",
+                    "means",
+                    "reference",
+                )
+            },
+        ),
+        (
+            _("Notes"),
+            {
+                "fields": ("notes",),
+            },
+        ),
+        (
+            _("Timestamps"),
+            {
+                "fields": ("created_at",),
+            },
+        ),
+    )
+
+    readonly_fields = ("created_at",)
 
     def has_delete_permission(self, request, obj=...):
+        return False
+
+    def has_change_permission(self, request, obj=...):
         return False
 
 

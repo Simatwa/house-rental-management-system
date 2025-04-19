@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 from django.utils.translation import gettext_lazy as _
 from rental_ms.utils import EnumWithChoices
+from ckeditor.fields import RichTextField
+from rental_ms.settings import CURRENCY
 
 
 class Account(models.Model):
@@ -62,12 +64,18 @@ class UserAccount(models.Model):
         return str(self.balance)
 
 
-class Payment(models.Model):
-    class PaymentMethod(EnumWithChoices):
+class Transaction(models.Model):
+    class TransactionMeans(EnumWithChoices):
         CASH = "Cash"
-        MPESA = "m-pesa"
+        MPESA = "M-PESA"
         BANK = "Bank"
         OTHER = "Other"
+
+    class TransactionType(EnumWithChoices):
+        DEPOSIT = "Deposit"
+        WITHDRAWAL = "Withdrawal"
+        RENT_PAYMENT = "Rent Payment"
+        FEE_PAYMENT = "Fee Payment"
 
     user = models.ForeignKey(
         "users.CustomUser",
@@ -76,18 +84,34 @@ class Payment(models.Model):
         help_text=_("User account to deposit to."),
         related_name="payments",
     )
+    type = models.CharField(
+        max_length=30,
+        verbose_name=_("Type"),
+        help_text=_("Transaction type"),
+        choices=TransactionType.choices(),
+        null=False,
+        blank=False,
+    )
 
     amount = models.DecimalField(
-        max_digits=10, decimal_places=2, help_text=_("Transaction amount in Ksh")
+        max_digits=10,
+        decimal_places=2,
+        help_text=_(f"Transaction amount in {CURRENCY}"),
     )
-    method = models.CharField(
+    means = models.CharField(
         max_length=20,
-        choices=PaymentMethod.choices(),
-        default=PaymentMethod.MPESA.value,
-        help_text=_("Select means of payment"),
+        choices=TransactionMeans.choices(),
+        default=TransactionMeans.MPESA.value,
+        help_text=_("Select means of transaxtion"),
     )
     reference = models.CharField(
-        max_length=100, help_text=_("Transaction ID or -- for cash.")
+        max_length=100, help_text=_("Transaction ID or -- for cash."), default="--"
+    )
+    notes = RichTextField(
+        verbose_name="Notes",
+        null=True,
+        blank=True,
+        help_text=_("Further transaction details"),
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -96,12 +120,17 @@ class Payment(models.Model):
     )
 
     def __str__(self):
-        return f"Amount Ksh.{self.amount} via {self.method} (Ref: {self.reference})"
+        return (
+            f"Amount {CURRENCY}. {self.amount} via {self.means} (Ref: {self.reference})"
+        )
 
     def save(self, *args, **kwargs):
         if self.id:
-            raise Exception("Payments cannot be edited")
-        self.user.account.balance += self.amount
+            raise Exception("Transaction cannot be edited")
+        if self.type == self.TransactionType.DEPOSIT.value:
+            self.user.account.balance += self.amount
+        else:
+            self.user.account.balance -= self.amount
         self.user.account.save()
         super().save(*args, **kwargs)
 
@@ -110,7 +139,7 @@ class ExtraFee(models.Model):
     name = models.CharField(max_length=100, help_text=_("Fee name"), unique=True)
     details = models.TextField(help_text=_("What is this fee for?"))
     amount = models.DecimalField(
-        max_digits=8, decimal_places=2, help_text=_("Fee amount in Ksh")
+        max_digits=8, decimal_places=2, help_text=_(f"Fee amount in {CURRENCY}")
     )
     updated_at = models.DateTimeField(
         auto_now=True,
@@ -124,7 +153,7 @@ class ExtraFee(models.Model):
     )
 
     def __str__(self):
-        return f"{self.name} (Ksh.{self.amount})"
+        return f"{self.name} ({CURRENCY}.{self.amount})"
 
     def model_dump(self):
         return dict(

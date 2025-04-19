@@ -59,6 +59,7 @@ class EditablePersonalData(BaseModel):
     last_name: Optional[str] = None
     occupation: Optional[str] = None
     phone_number: Optional[str] = None
+    emergency_contact_number: Optional[str] = None
     email: Optional[str] = None
 
     class Config:
@@ -68,6 +69,7 @@ class EditablePersonalData(BaseModel):
                 "last_name": "Doe",
                 "occupation": "Doctor",
                 "phone_number": "+1234567890",
+                "emergency_contact_number": "+1234567890",
                 "email": "john.doe@example.com",
             }
         }
@@ -95,6 +97,7 @@ class UserProfile(EditablePersonalData):
                 "gender": "M",
                 "occupation": "Doctor",
                 "phone_number": "+1234567890",
+                "emergency_contact_number": "+1234567890",
                 "email": "john.doe@example.com",
                 "username": "johndoe",
                 "account_balance": 1244,

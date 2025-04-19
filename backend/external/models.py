@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import CustomUser
 from django.utils.translation import gettext_lazy as _
 from rental_ms.utils import generate_document_filepath, EnumWithChoices
 from django.utils import timezone
@@ -126,12 +127,16 @@ class ServiceFeedback(models.Model):
         TERRIBLE = "Terrible"
 
     class SenderRole(EnumWithChoices):
+        OWNER = "Property Owner"
         PROPERTY_MANAGER = "Property Manager"
         TENANT = "Tenant"
-        LANDLORD = "Landlord"
+        CARETAKER = "Caretaker"
 
-    sender = models.ForeignKey(
-        "users.CustomUser", on_delete=models.CASCADE, help_text=_("Feedback sender")
+    sender = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        help_text=_("Feedback sender"),
+        related_name="feedback",
     )
     message = models.TextField(help_text=_("Response body"))
     rate = models.CharField(
