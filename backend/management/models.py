@@ -130,6 +130,17 @@ class Concern(models.Model):
         help_text=_("Date and time when the entry was created"),
     )
 
+    def model_dump(self):
+        dict(
+            id=self.id,
+            about=self.about,
+            details=self.details,
+            response=self.response,
+            status=self.status,
+            updated_at=self.updated_at,
+            created_at=self.created_at,
+        )
+
     class Meta:
         verbose_name = _("Tenant Concern")
         verbose_name_plural = _("Tenant Concerns")

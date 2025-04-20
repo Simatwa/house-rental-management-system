@@ -252,6 +252,7 @@ JAZZMIN_SETTINGS = {
         "external.About": "fas fa-info-circle",
         "external.Faq": "fas fa-question-circle",
         "external.Message": "fas fa-envelope",
+        "external.Document": "fas fa-file-alt",
     },
 }
 

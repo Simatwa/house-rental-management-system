@@ -3,6 +3,7 @@ from users.models import CustomUser
 from django.utils.translation import gettext_lazy as _
 from rental_ms.utils import generate_document_filepath, EnumWithChoices
 from django.utils import timezone
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -264,3 +265,42 @@ class Gallery(models.Model):
     class Meta:
         verbose_name = _("Gallery")
         verbose_name_plural = _("Galleries")
+
+
+class Document(models.Model):
+    class DocumentName(EnumWithChoices):
+        TERMS_OF_USE = "Terms of Service"
+        POLICY = "Policy"
+
+    name = models.CharField(
+        max_length=30,
+        verbose_name="name",
+        choices=DocumentName.choices(),
+        help_text=_("Document name"),
+        null=False,
+        blank=False,
+    )
+    content = RichTextField(
+        verbose_name="Content", help_text=_("Document content"), null=False, blank=False
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("updated at"),
+        help_text=_("Date and time when the entry was updated"),
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("created at"),
+        help_text=_("Date and time when the entry was created"),
+    )
+
+    def __str__(self):
+        return f"{self.name} ({self.id})"
+
+    def model_dump(self):
+        return dict(name=self.name, content=self.content, updated_at=self.updated_at)
+
+    class Meta:
+        verbose_name = _("Document")
+        verbose_name_plural = _("Documents")

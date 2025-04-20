@@ -231,6 +231,7 @@ class UnitGroup(models.Model):
         else:
             # Maybe others were occasionally added
             pass
+        super().save(*args, **kwargs)
 
     def model_dump(self):
         return dict(

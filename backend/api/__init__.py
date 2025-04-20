@@ -73,11 +73,20 @@ app.mount("/d", app=WSGIMiddleware(WSGIHandler()), name="django")
 
 if FRONTEND_DIR:
 
-    @app.get("/{path}", name="React requests hit here", include_in_schema=False)
-    def serve_react_app(path: str):
+    def get_index_reponse():
         file_path = FRONTEND_DIR / "index.html"
         if file_path.exists():
             return Response(content=file_path.read_text(), media_type="text/html")
         return Response(content="index.html not found", status_code=404)
+
+    @app.get("/{path}", name="React requests hit here", include_in_schema=False)
+    def serve_react_app(path: str):
+        return get_index_reponse()
+
+    @app.get(
+        "/dashboard/{path}", name="React requests hit here", include_in_schema=False
+    )
+    def serve_react_app_dashboard(path: str):
+        return get_index_reponse()
 
     app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")

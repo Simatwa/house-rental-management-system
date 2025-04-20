@@ -252,7 +252,7 @@ def add_new_concern(
     new_concern = Concern.objects.create(**new_concern_dict)
     new_concern.save()
     # new_concern.refresh_from_db()
-    return jsonable_encoder(new_concern)
+    return new_concern.model_dump()
 
 
 @router.patch("/concern/{id}", name="Update existing concern")
@@ -274,7 +274,7 @@ def update_existing_concern(
         target_concern.about = get_value(concern.about, target_concern.about)
         target_concern.details = get_value(concern.details, target_concern.details)
         target_concern.save()
-        return jsonable_encoder(target_concern)
+        return target_concern.model_dump()
     except Concern.DoesNotExist:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -290,7 +290,7 @@ def get_concern_details(
     """Get particular concern details"""
     try:
         target_concern = Concern.objects.get(id=id, tenant=tenant)
-        return jsonable_encoder(target_concern)
+        return target_concern.model_dump()
     except Concern.DoesNotExist:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

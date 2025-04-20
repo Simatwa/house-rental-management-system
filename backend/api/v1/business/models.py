@@ -179,6 +179,12 @@ class UnitGroupInfo(BaseModel):
         return get_document_path(value)
 
 
+class DocumentInfo(BaseModel):
+    name: str
+    content: str
+    updated_at: datetime
+
+
 class AppUtilityInfo(BaseModel):
     name: AppUtility.UtilityName
     description: str

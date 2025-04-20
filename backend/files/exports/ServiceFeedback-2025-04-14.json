@@ -1,1 +1,56 @@
-[{"sender": 10, "message": "Clean and well-maintained common areas.", "rate": "Excellent", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 9, "message": "Quick internet connection and reliable utilities.", "rate": "Average", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 8, "message": "Flexible lease terms for students.", "rate": "Good", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 7, "message": "Well-maintained property and yard.", "rate": "Excellent", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 6, "message": "Ample storage space for personal belongings.", "rate": "Average", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 5, "message": "Close proximity to public transportation.", "rate": "Good", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 4, "message": "Modern appliances and comfortable beds.", "rate": "Excellent", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 3, "message": "Quiet neighborhood perfect for studying.", "rate": "Average", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 2, "message": "Friendly landlord and quick response time.", "rate": "Good", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 1, "message": "Clean and spacious living area.", "rate": "Excellent", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 01:03:05", "created_at": "2025-04-15 01:03:05"}, {"sender": 6, "message": "Very conducive rooms.", "rate": "Good", "sender_role": "Tenant", "show_in_index": "1", "updated_at": "2025-04-15 00:54:32", "created_at": "2025-04-15 00:54:32"}]
+[
+    {
+        "sender": 1,
+        "message": "Clean and well-maintained common areas.",
+        "rate": "Excellent",
+        "sender_role": "Tenant",
+        "show_in_index": "1",
+        "updated_at": "2025-04-15 01:03:05",
+        "created_at": "2025-04-15 01:03:05"
+    },
+    {
+        "sender": 2,
+        "message": "Quick internet connection and reliable utilities.",
+        "rate": "Average",
+        "sender_role": "Tenant",
+        "show_in_index": "1",
+        "updated_at": "2025-04-15 01:03:05",
+        "created_at": "2025-04-15 01:03:05"
+    },
+    {
+        "sender": 3,
+        "message": "Flexible lease terms for students.",
+        "rate": "Good",
+        "sender_role": "Tenant",
+        "show_in_index": "1",
+        "updated_at": "2025-04-15 01:03:05",
+        "created_at": "2025-04-15 01:03:05"
+    },
+    {
+        "sender": 4,
+        "message": "Well-maintained property and yard.",
+        "rate": "Excellent",
+        "sender_role": "Tenant",
+        "show_in_index": "1",
+        "updated_at": "2025-04-15 01:03:05",
+        "created_at": "2025-04-15 01:03:05"
+    },
+    {
+        "sender": 5,
+        "message": "Ample storage space for personal belongings.",
+        "rate": "Average",
+        "sender_role": "Tenant",
+        "show_in_index": "1",
+        "updated_at": "2025-04-15 01:03:05",
+        "created_at": "2025-04-15 01:03:05"
+    },
+    {
+        "sender": 6,
+        "message": "Close proximity to public transportation.",
+        "rate": "Good",
+        "sender_role": "Tenant",
+        "show_in_index": "1",
+        "updated_at": "2025-04-15 01:03:05",
+        "created_at": "2025-04-15 01:03:05"
+    }
+]

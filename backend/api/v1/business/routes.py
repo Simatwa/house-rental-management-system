@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Path, Query
+from fastapi import APIRouter, Path, Query, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from external.models import About, Message, FAQ, ServiceFeedback, Gallery
+from external.models import About, Message, FAQ, ServiceFeedback, Gallery, Document
 from rental.models import House, UnitGroup
 from management.models import AppUtility
 
@@ -16,6 +16,7 @@ from api.v1.business.models import (
     UserFeedback,
     HouseInfo,
     UnitGroupInfo,
+    DocumentInfo,
     AppUtilityInfo,
 )
 from typing import Annotated
@@ -90,6 +91,20 @@ def get_faqs() -> list[FAQDetails]:
         FAQDetails(**jsonable_encoder(faq))
         for faq in FAQ.objects.filter(is_shown=True).order_by("created_at").all()[:10]
     ]
+
+
+@router.get("/document", name="Site document")
+def get_site_document(
+    name: Annotated[Document.DocumentName, Query(description="Document name")]
+) -> DocumentInfo:
+    """Get site document such as Policy, ToS etc"""
+    document = Document.objects.filter(name=name.value).last()
+    if document is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Document has not yet been created.",
+        )
+    return document.model_dump()
 
 
 @router.get("/app/utilities", name="App utilities")
