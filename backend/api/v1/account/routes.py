@@ -207,9 +207,14 @@ def send_mpesa_popup_to(
             account_reference=account_number,
         )
         # Push send successfully let's SIMULATE account debitting
-        # TODO: Implement a real account debition.
-        user.account.balance += amount
-        user.account.save()
+        # user.account.save()
+        Transaction.objects.create(
+            user=user,
+            type=Transaction.TransactionType.DEPOSIT.value,
+            amount=amount,
+            means=Transaction.TransactionMeans.MPESA.value,
+            reference=generate_password_reset_token(),
+        ).save()
 
     send_popup(popup_to.phone_number, popup_to.amount)
     return ProcessFeedback(detail="M-pesa popup sent successfully.")

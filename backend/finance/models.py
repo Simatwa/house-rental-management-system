@@ -125,8 +125,8 @@ class Transaction(models.Model):
         )
 
     def save(self, *args, **kwargs):
-        if self.id:
-            raise Exception("Transaction cannot be edited")
+        # if self.id:
+        #    raise Exception("Transaction cannot be edited")
         if self.type == self.TransactionType.DEPOSIT.value:
             self.user.account.balance += self.amount
         else:
