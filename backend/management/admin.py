@@ -74,8 +74,18 @@ class ConcernAdmin(DevelopmentImportExportModelAdmin):
             },
         ),
         (
-            _("Status & Timestamps"),
-            {"fields": ("status", "created_at", "updated_at"), "classes": ["tab"]},
+            _("Response & Status"),
+            {
+                "fields": (
+                    "status",
+                    "response",
+                ),
+                "classes": ["tab"],
+            },
+        ),
+        (
+            _("Timestamps"),
+            {"fields": ("created_at", "updated_at"), "classes": ["tab"]},
         ),
     )
     readonly_fields = ("created_at", "updated_at")

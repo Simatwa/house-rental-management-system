@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator, HttpUrl
+from pydantic import BaseModel, field_validator, HttpUrl, Field
 from typing import Optional, List
 from management.models import CommunityMessage, Concern
 from rental.models import Unit

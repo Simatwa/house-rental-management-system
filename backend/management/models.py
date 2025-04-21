@@ -131,7 +131,7 @@ class Concern(models.Model):
     )
 
     def model_dump(self):
-        dict(
+        return dict(
             id=self.id,
             about=self.about,
             details=self.details,

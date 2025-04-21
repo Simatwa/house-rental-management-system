@@ -92,11 +92,16 @@ def get_occupied_unit(tenant: Annotated[Tenant, Depends(get_tenant)]) -> UnitInf
 def get_personal_messages(
     tenant: Annotated[Tenant, Depends(get_tenant)],
     is_read: Annotated[bool, Query(description="Is read filter")] = None,
+    category: Annotated[
+        CommunityMessage.MessageCategory, Query(description="Messages category")
+    ] = None,
 ) -> List[PersonalMessageInfo]:
     """Messages that targets one tenant"""
     search_filter = dict(tenant=tenant)
     if is_read is not None:
         search_filter["is_read"] = is_read
+    if category is not None:
+        search_filter["category"] = category.value
     return [
         jsonable_encoder(message)
         for message in PersonalMessage.objects.filter(**search_filter)
@@ -125,6 +130,9 @@ def mark_personal_message_read(
 def get_group_messages(
     tenant: Annotated[Tenant, Depends(get_tenant)],
     is_read: Annotated[bool, Query(description="Is read filter")] = None,
+    category: Annotated[
+        CommunityMessage.MessageCategory, Query(description="Messages category")
+    ] = None,
 ) -> List[GroupMessageInfo]:
     """Messages from unit group that tenant is a member"""
     message_list = []
@@ -134,6 +142,8 @@ def get_group_messages(
             search_filter["read_by"] = tenant
         elif is_read is False:
             search_filter["read_by__isnull"] = True
+    if category is not None:
+        search_filter["category"] = category.value
 
     for message in (
         GroupMessage.objects.prefetch_related("read_by")
@@ -169,6 +179,9 @@ def mark_group_message_read(
 def get_community_messages(
     tenant: Annotated[Tenant, Depends(get_tenant)],
     is_read: Annotated[bool, Query(description="Is read filter")] = None,
+    category: Annotated[
+        CommunityMessage.MessageCategory, Query(description="Messages category")
+    ] = None,
 ) -> List[CommunityMessageInfo]:
     """Messages from communities that tenant is a member"""
     message_list = []
@@ -180,6 +193,8 @@ def get_community_messages(
             search_filter["read_by"] = tenant
         elif is_read is False:
             search_filter["read_by__isnull"] = True
+    if category is not None:
+        search_filter["category"] = category.value
 
     for message in (
         CommunityMessage.objects.prefetch_related("communities", "read_by")
