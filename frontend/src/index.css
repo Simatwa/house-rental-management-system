@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --text: #000000;
+}
+
+.dark {
+  --background: #1a1a1a;
+  --text: #e5e5e5;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Modal backdrop blur */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+}
+
+/* Responsive design utilities */
+@layer utilities {
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-spacing {
+    @apply py-12 md:py-24;
+  }
+  
+  .responsive-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+}
+
+/* Dark mode styles */
+.dark .bg-white {
+  @apply bg-dark text-dark;
+}
+
+.dark .border-gray-200 {
+  @apply border-gray-700;
+}
+
+.dark .text-gray-600 {
+  @apply text-gray-400;
+}
+
+.dark .text-gray-900 {
+  @apply text-gray-100;
+}
+
+/* Testimonials animation */
+.testimonial-card {
+  transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Modal animations */
+.modal-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.modal-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modal-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}

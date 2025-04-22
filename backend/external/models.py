@@ -100,7 +100,7 @@ class About(models.Model):
     wallpaper = models.ImageField(
         help_text=_("Site wallpaper"),
         upload_to=generate_document_filepath,
-        default="default/leohoho-QL7KdXdcfWA-unsplash.jpg",
+        default="default/pexels-photo-1571460.jpeg",
         blank=True,
         null=False,
     )

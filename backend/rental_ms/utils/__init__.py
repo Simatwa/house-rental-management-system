@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from datetime import datetime, timedelta
 from rental_ms import settings
+import random
+from string import ascii_lowercase, ascii_uppercase, digits
 
 headers = {"Accept": "*/*"}
 
@@ -62,6 +64,11 @@ def send_email(subject: str, message: str, recipient: str, html_message: str = N
 
 def get_expiry_datetime(minutes: float = 30) -> datetime:
     return timezone.now() + timedelta(minutes=minutes)
+
+
+def generate_random_token(length: int = 8) -> str:
+    population = list(ascii_uppercase + digits)
+    return "".join(random.sample(population, length))
 
 
 class EnumWithChoices(Enum):

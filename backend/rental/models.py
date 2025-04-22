@@ -1,7 +1,12 @@
 from django.db import models
 from users.models import CustomUser
 from management.models import Office
-from rental_ms.utils import EnumWithChoices, generate_document_filepath
+from finance.models import Transaction
+from rental_ms.utils import (
+    EnumWithChoices,
+    generate_document_filepath,
+    generate_random_token,
+)
 from management.models import Community
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
@@ -11,6 +16,8 @@ from django.conf import settings
 from django.utils import timezone
 from finance.models import ExtraFee
 from ckeditor.fields import RichTextField
+from dateutil.relativedelta import relativedelta
+from management.models import PersonalMessage, CommunityMessage
 
 
 # Create your models here
@@ -95,7 +102,7 @@ class UnitGroup(models.Model):
         max_length=100,
         verbose_name=_("Name"),
         help_text=_("Name of the unit group e.g Second Floor"),
-        unique=True,
+        unique=False,
     )
     abbreviated_name = models.CharField(
         max_length=20,
@@ -182,6 +189,13 @@ class UnitGroup(models.Model):
             )
         ],
     )
+    last_rent_payment_date = models.DateField(
+        null=False,
+        blank=True,
+        auto_now=True,
+        verbose_name=_("Last rent payment date"),
+        help_text=_("Last rent payment date"),
+    )
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_("Created At"),
@@ -248,6 +262,32 @@ class UnitGroup(models.Model):
             caretakers_ids=[caretaker.id for caretaker in self.caretakers.all()],
         )
 
+    def process_rent_payments(self):
+        for unit in self.units.filter(
+            occupied_status=Unit.OccupiedStatus.OCCUPIED.value,
+            last_rent_payment_date__month=(
+                timezone.now() - relativedelta(months=1)
+            ).month,
+        ).all():
+            Transaction.objects.create(
+                user=unit.tenant.user,
+                type=Transaction.TransactionType.RENT_PAYMENT.value,
+                means=Transaction.TransactionMeans.CASH.value,
+                amount=self.monthly_rent,
+                reference=generate_random_token(),
+                notes="Monthly payment",
+            ).save()
+            unit.last_rent_payment_date = timezone.now().date()
+            unit.save()
+            PersonalMessage.objects.create(
+                tenant=unit.tenant,
+                category=CommunityMessage.MessageCategory.PAYMENT.value,
+                subject="Monthly Rent",
+                content="Your monthly rent has been processed successfully.",
+            ).save()
+        self.last_rent_payment_date = timezone.now().date()
+        self.save()
+
 
 class Unit(models.Model):
 
@@ -269,7 +309,7 @@ class Unit(models.Model):
         max_length=100,
         verbose_name=_("Name"),
         help_text=_("Name of the unit e.g Second Floor Room 2"),
-        unique=True,
+        unique=False,
     )
     abbreviated_name = models.CharField(
         max_length=20,
@@ -283,6 +323,9 @@ class Unit(models.Model):
         default=OccupiedStatus.VACANT.value,
         verbose_name=_("Occupied Status"),
         help_text=_("Whether this unit is currently Vacant/Occupied/Closed"),
+    )
+    last_rent_payment_date = models.DateField(
+        null=False, blank=True, auto_now=True, verbose_name=_("Last rent payment date")
     )
     updated_at = models.DateTimeField(
         auto_now=True,
@@ -309,6 +352,7 @@ class Unit(models.Model):
             abbreviated_name=self.abbreviated_name,
             occupied_status=self.occupied_status,
             unit_group_id=self.unit_group.id,
+            last_rent_payment_date=self.last_rent_payment_date,
         )
 
 
@@ -373,6 +417,7 @@ class Tenant(models.Model):
     def save(self, *args, **kwargs):
         if self.id is None:
             # TODO: Welcome tenant via email
+            self.unit.last_rent_payment_date = timezone.now().date()
             pass
         super().save(*args, **kwargs)
         self._update_unit_status("Occupied")

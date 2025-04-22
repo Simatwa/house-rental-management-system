@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from rental_ms.utils.admin import (
     DevelopmentImportExportModelAdmin,
 )
+from datetime import timedelta
+from django.utils import timezone
 
 
 # Register your models here.
@@ -86,6 +88,15 @@ class HouseAdmin(DevelopmentImportExportModelAdmin):
 
 @admin.register(UnitGroup)
 class UnitGroupAdmin(DevelopmentImportExportModelAdmin):
+    def pay_rent_action(modeladmin, request, queryset: list[UnitGroup]):
+        for unit_group in queryset:
+            unit_group.process_rent_payments()
+        modeladmin.message_user(
+            request, _("Rent payment processed for selected unit groups.")
+        )
+
+    pay_rent_action.short_description = "Process monthly rent payment"
+
     def total_occupied_units(cls, obj: Unit):
         return obj.units.filter(
             occupied_status=Unit.OccupiedStatus.OCCUPIED.value
@@ -118,10 +129,13 @@ class UnitGroupAdmin(DevelopmentImportExportModelAdmin):
 
     monthly_income.short_description = _("Monthly income")
 
+    actions = ["delete_selected", "pay_rent_action"]
+
     list_display = (
         "name",
         "house",
         "monthly_rent",
+        "last_rent_payment_date",
         "number_of_units",
         "total_occupied_units",
         "total_vacant_units",
@@ -171,10 +185,13 @@ class UnitGroupAdmin(DevelopmentImportExportModelAdmin):
         ),
         (
             _("Timestamps"),
-            {"fields": ("created_at", "updated_at"), "classes": ["tab"]},
+            {
+                "fields": ("last_rent_payment_date", "created_at", "updated_at"),
+                "classes": ["tab"],
+            },
         ),
     )
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("last_rent_payment_date", "created_at", "updated_at")
     ordering = ("-created_at",)
 
 
@@ -189,7 +206,12 @@ class UnitAdmin(DevelopmentImportExportModelAdmin):
         "occupied_status",
         "updated_at",
     )
-    search_fields = ("name", "abbreviated_name", "unit_group__name", "tenant__username")
+    search_fields = (
+        "name",
+        "abbreviated_name",
+        "unit_group__name",
+        "tenant__user__username",
+    )
     list_filter = (
         "occupied_status",
         "unit_group",
@@ -221,10 +243,13 @@ class UnitAdmin(DevelopmentImportExportModelAdmin):
         ),
         (
             _("Timestamps"),
-            {"fields": ("created_at", "updated_at"), "classes": ["tab"]},
+            {
+                "fields": ("last_rent_payment_date", "created_at", "updated_at"),
+                "classes": ["tab"],
+            },
         ),
     )
-    readonly_fields = ("created_at", "tenant", "updated_at")
+    readonly_fields = ("tenant", "last_rent_payment_date", "created_at", "updated_at")
     ordering = ("-created_at",)
 
 

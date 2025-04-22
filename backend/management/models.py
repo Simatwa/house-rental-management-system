@@ -228,7 +228,6 @@ class CommunityMessage(models.Model):
     )
     read_by = models.ManyToManyField(
         "rental.Tenant",
-        null=True,
         blank=True,
         verbose_name=_("Read by"),
         help_text=_("Tenants who have read this message"),
@@ -294,7 +293,6 @@ class GroupMessage(models.Model):
     )
     read_by = models.ManyToManyField(
         "rental.Tenant",
-        null=True,
         blank=True,
         verbose_name=_("Read by"),
         help_text=_("Tenants who have read this message"),

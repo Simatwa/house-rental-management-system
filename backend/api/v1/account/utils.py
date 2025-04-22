@@ -4,9 +4,10 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordBearer
 from typing import Annotated
 from users.models import CustomUser
+from rental_ms.utils import generate_random_token
 import uuid
 import random
-from string import ascii_lowercase, ascii_uppercase, digits
+from string import ascii_lowercase
 import asyncio
 
 token_id = "rms_"
@@ -45,5 +46,4 @@ def generate_token() -> str:
 
 
 def generate_password_reset_token(length: int = 8) -> str:
-    population = list(ascii_uppercase + digits)
-    return "".join(random.sample(population, length))
+    return generate_random_token(length)

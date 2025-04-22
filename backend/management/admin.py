@@ -59,7 +59,7 @@ class OfficeAdmin(DevelopmentImportExportModelAdmin):
 class ConcernAdmin(DevelopmentImportExportModelAdmin):
     list_display = ("tenant", "about", "status", "updated_at", "created_at")
     list_editable_fields = ("status",)
-    search_fields = ("tenant__username", "about", "details", "response", "status")
+    search_fields = ("tenant__user__username", "about", "details", "response", "status")
     list_filter = ("status", "updated_at", "created_at")
     fieldsets = (
         (
@@ -157,7 +157,7 @@ class PersonalMessageAdmin(DevelopmentImportExportModelAdmin):
         "created_at",
         "updated_at",
     )
-    search_fields = ("tenant__username", "subject", "content", "category")
+    search_fields = ("tenant__user__username", "subject", "content", "category")
     list_filter = ("category", "is_read", "created_at", "updated_at")
     fieldsets = (
         (
