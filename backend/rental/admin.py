@@ -4,8 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from rental_ms.utils.admin import (
     DevelopmentImportExportModelAdmin,
 )
-from datetime import timedelta
-from django.utils import timezone
+from rental_ms import settings
 
 
 # Register your models here.
@@ -44,7 +43,7 @@ class HouseAdmin(DevelopmentImportExportModelAdmin):
             ).count()
             for unit_group in obj.unit_groups.all()
         )
-        return f"Ksh. {net_income:,}"
+        return f"{settings.CURRENCY}. {net_income:,}"
 
     monthly_income.short_description = _("Monthly income")
 
@@ -125,7 +124,7 @@ class UnitGroupAdmin(DevelopmentImportExportModelAdmin):
                 unit_group=obj, occupied_status=Unit.OccupiedStatus.OCCUPIED.value
             ).count()
         )
-        return f"Ksh. {net_income:,}"
+        return f"{settings.CURRENCY}. {net_income:,}"
 
     monthly_income.short_description = _("Monthly income")
 

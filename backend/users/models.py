@@ -101,7 +101,7 @@ class CustomUser(AbstractUser):
     )
 
     REQUIRED_FIELDS = (
-        "email",
+        #"email",
         "identity_number",
     )
 
