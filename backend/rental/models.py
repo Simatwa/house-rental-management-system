@@ -12,12 +12,12 @@ from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.template.loader import render_to_string
-from django.conf import settings
 from django.utils import timezone
 from finance.models import ExtraFee
 from ckeditor.fields import RichTextField
 from dateutil.relativedelta import relativedelta
 from management.models import PersonalMessage, CommunityMessage
+from rental_ms import settings
 
 
 # Create your models here
@@ -263,12 +263,16 @@ class UnitGroup(models.Model):
         )
 
     def process_rent_payments(self):
-        for unit in self.units.filter(
+        search_filter = dict(
             occupied_status=Unit.OccupiedStatus.OCCUPIED.value,
-            last_rent_payment_date__month=(
+        )
+        if not settings.DEMO:
+            # For demo we ensure it works
+            search_filter["last_rent_payment_date__month"] = (
                 timezone.now() - relativedelta(months=1)
-            ).month,
-        ).all():
+            ).month
+
+        for unit in self.units.filter(**search_filter).all():
             Transaction.objects.create(
                 user=unit.tenant.user,
                 type=Transaction.TransactionType.RENT_PAYMENT.value,

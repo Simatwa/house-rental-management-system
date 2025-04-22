@@ -127,6 +127,10 @@ class Transaction(models.Model):
     def save(self, *args, **kwargs):
         # if self.id:
         #    raise Exception("Transaction cannot be edited")
+        # import traceback
+        # traceback.print_stack()
+        # print(self.amount)
+        # Race condition here
         if self.type == self.TransactionType.DEPOSIT.value:
             self.user.account.balance += self.amount
         else:

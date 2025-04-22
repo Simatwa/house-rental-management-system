@@ -52,5 +52,7 @@ class EnvSettings(BaseModel):
     # UTILS
     CURRENCY: Optional[str] = "Ksh"
 
+    DEMO: Optional[bool] = False
+
 
 env_setting = EnvSettings(**Envist().get_all())

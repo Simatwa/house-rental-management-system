@@ -199,10 +199,11 @@ SITE_ADDRESS = env_setting.SITE_ADDRESS
 
 CURRENCY = env_setting.CURRENCY
 """Transaction currency"""
+DEMO = env_setting.DEMO
 
 # ADMIN
 JAZZMIN_SETTINGS = {
-    "show_ui_builder": env_setting.DEBUG,
+    "show_ui_builder": True,  # env_setting.DEBUG,
     "site_title": SITE_NAME,
     "site_header": SITE_NAME,
     "site_brand": SITE_NAME,
@@ -281,6 +282,39 @@ JAZZMIN_UI_TWEAKS = {
     "button_classes": {
         "primary": "btn-primary",
         "secondary": "btn-secondary",
+        "info": "btn-outline-info",
+        "warning": "btn-outline-warning",
+        "danger": "btn-outline-danger",
+        "success": "btn-outline-success",
+    },
+    "actions_sticky_top": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-orange",
+    "accent": "accent-orange",
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-orange",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": True,
+    "sidebar_nav_flat_style": True,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
         "info": "btn-outline-info",
         "warning": "btn-outline-warning",
         "danger": "btn-outline-danger",
