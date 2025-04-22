@@ -3,7 +3,6 @@ from django.db import models
 # Create your models here.
 from django.utils.translation import gettext_lazy as _
 from rental_ms.utils import EnumWithChoices
-from ckeditor.fields import RichTextField
 from rental_ms.settings import CURRENCY
 
 

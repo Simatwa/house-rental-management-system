@@ -69,9 +69,9 @@ class AboutAdmin(DevelopmentImportExportModelAdmin):
 
 @admin.register(ServiceFeedback)
 class ServiceFeedbackAdmin(DevelopmentImportExportModelAdmin):
-    list_display = ("sender", "rate", "show_in_index", "sender_role", "created_at")
+    list_display = ("sender", "rate", "message","show_in_index", "sender_role", "created_at")
     search_fields = ("sender__username", "message")
-    list_filter = ("rate", "show_in_index", "updated_at", "created_at")
+    list_filter = ("rate", "sender_role", "show_in_index", "updated_at", "created_at")
     list_editable = ("show_in_index",)
     ordering = ("-created_at",)
     fieldsets = (
