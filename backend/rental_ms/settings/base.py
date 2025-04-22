@@ -206,7 +206,7 @@ JAZZMIN_SETTINGS = {
     "site_title": SITE_NAME,
     "site_header": SITE_NAME,
     "site_brand": SITE_NAME,
-    "site_logo": "carwash/img/logo.png",
+    "site_logo": "rental/img/logo.png",
     "site_logo_classes": "img-circle",
     "welcome_sign": f"Welcome to {SITE_NAME}",
     "copyright": SITE_NAME,

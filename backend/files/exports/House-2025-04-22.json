@@ -1,0 +1,57 @@
+[
+    {
+        "id": "7",
+        "name": "Green Haven",
+        "office": 1,
+        "address": "4560 Mombasa Road, Nairobi, Kenya",
+        "description": "<p>Beautiful 3-bedroom house with a spacious living room and modern kitchen. Located in a quiet neighborhood near schools and shopping centers.</p>",
+        "picture": "default/apartment-2138949_1920.jpg",
+        "communities": "",
+        "updated_at": "2025-04-21 17:33:00",
+        "created_at": "2025-04-21 17:33:00"
+    },
+    {
+        "id": "8",
+        "name": "Lake View Estate",
+        "office": 2,
+        "address": "789 Lake Road, Kisumu, Kenya",
+        "description": "<p>Cozy 2-bedroom apartment overlooking Lake Victoria. Features air conditioning and a private balcony with lake views.</p>",
+        "picture": "default/apartment-2138949_1920.jpg",
+        "communities": "",
+        "updated_at": "2025-04-21 17:33:00",
+        "created_at": "2025-04-21 17:33:00"
+    },
+    {
+        "id": "9",
+        "name": "City Heights",
+        "office": 3,
+        "address": "1234 Ngong Road, Nairobi, Kenya",
+        "description": "<p>Modern 4-bedroom house with a rooftop pool and gym. Close to major highways and business districts.</p>",
+        "picture": "default/apartment-2138949_1920.jpg",
+        "communities": "",
+        "updated_at": "2025-04-21 17:33:00",
+        "created_at": "2025-04-21 17:33:00"
+    },
+    {
+        "id": "10",
+        "name": "Mountain Retreat",
+        "office": 4,
+        "address": "5678 Eldoret Highway, Nakuru, Kenya",
+        "description": "<p>Rustic 3-bedroom cottage surrounded by nature. Perfect for families seeking a peaceful getaway from city life.</p>",
+        "picture": "default/apartment-2138949_1920.jpg",
+        "communities": "",
+        "updated_at": "2025-04-21 17:33:00",
+        "created_at": "2025-04-21 17:33:00"
+    },
+    {
+        "id": "11",
+        "name": "Beachside Breeze",
+        "office": 5,
+        "address": "9012 Coast Road, Mombasa, Kenya",
+        "description": "<p>Spacious 2-bedroom beachfront apartment with direct access to the ocean. Ideal for retirees or those seeking a relaxed lifestyle.</p>",
+        "picture": "default/apartment-2138949_1920.jpg",
+        "communities": "",
+        "updated_at": "2025-04-21 17:33:00",
+        "created_at": "2025-04-21 17:33:00"
+    }
+]

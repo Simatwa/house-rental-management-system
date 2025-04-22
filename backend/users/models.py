@@ -100,8 +100,10 @@ class CustomUser(AbstractUser):
         unique=True,
     )
 
+    #USERNAME_FIELD = "email"
+
     REQUIRED_FIELDS = (
-        #"email",
+        "email",
         "identity_number",
     )
 
@@ -111,7 +113,7 @@ class CustomUser(AbstractUser):
 
     def save(self, *args, **kwargs):
         if not self.id:  # new entry
-            if len(self.password) < 20:
+            if len(self.password) < 50:
                 self.set_password(self.password)
             new_account = UserAccount.objects.create()
             new_account.save()

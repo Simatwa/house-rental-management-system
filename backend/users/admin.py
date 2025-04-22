@@ -117,7 +117,13 @@ class CustomUserAdmin(DevelopmentImportExportModelAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("username", "usable_password", "password1", "password2"),
+                "fields": (
+                    "username",
+                    "identity_number",
+                    "usable_password",
+                    "password1",
+                    "password2",
+                ),
             },
         ),
     )
