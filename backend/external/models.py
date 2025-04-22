@@ -150,7 +150,7 @@ class ServiceFeedback(models.Model):
         default=SenderRole.TENANT.value,
     )
     show_in_index = models.BooleanField(
-        default=True,
+        default=False,
         help_text=_("Display this feedback in website's testimonials section."),
     )
     updated_at = models.DateTimeField(

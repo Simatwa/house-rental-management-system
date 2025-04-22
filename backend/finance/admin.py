@@ -96,7 +96,7 @@ class TransactionAdmin(DevelopmentImportExportModelAdmin):
         return False
 
     def has_change_permission(self, request, obj=...):
-        return False
+        return True
 
 
 @admin.register(ExtraFee)

@@ -27,7 +27,7 @@ router = APIRouter(prefix="/business", tags=["Business"])
 
 @router.get("/about", name="Business information")
 def get_hospital_details() -> BusinessAbout:
-    return jsonable_encoder(About.objects.all().first())
+    return jsonable_encoder(About.objects.all().last())
 
 
 # HOUSES INFO
@@ -64,7 +64,7 @@ def get_business_galleries() -> list[BusinessGallery]:
         jsonable_encoder(gallery)
         for gallery in Gallery.objects.filter(show_in_index=True)
         .all()
-        .order_by("created_at")[:12]
+        .order_by("-created_at")[:12]
     ]
 
 

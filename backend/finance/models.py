@@ -107,7 +107,7 @@ class Transaction(models.Model):
     reference = models.CharField(
         max_length=100, help_text=_("Transaction ID or -- for cash."), default="--"
     )
-    notes = RichTextField(
+    notes = models.TextField(
         verbose_name="Notes",
         null=True,
         blank=True,
