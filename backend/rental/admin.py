@@ -262,6 +262,8 @@ class TenantAdmin(DevelopmentImportExportModelAdmin):
     list_display = (
         "user",
         "unit",
+        # "unit__unit_group__name",
+        "unit__unit_group__house__name",
         "debt_amount",
         "lease_start_date",
         "lease_end_date",
@@ -269,7 +271,14 @@ class TenantAdmin(DevelopmentImportExportModelAdmin):
         "updated_at",
     )
     search_fields = ("user__username", "user__email")
-    list_filter = ("lease_start_date", "lease_end_date", "created_at", "updated_at")
+    list_filter = (
+        "unit__unit_group",
+        "unit__unit_group__house",
+        "lease_start_date",
+        "lease_end_date",
+        "created_at",
+        "updated_at",
+    )
     fieldsets = (
         (
             None,

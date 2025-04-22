@@ -191,7 +191,7 @@ def get_community_messages(
     if is_read is not None:
         if is_read:
             search_filter["read_by"] = tenant
-        elif is_read is False:
+        else:
             search_filter["read_by__isnull"] = True
     if category is not None:
         search_filter["category"] = category.value

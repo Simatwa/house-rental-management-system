@@ -157,7 +157,7 @@ LANGUAGES = (
     # ("de", _("German")),
     ("en", _("English")),
     ("sw", _("Swahili")),
-    ("fr", _("French")),
+    # ("fr", _("French")),
 )
 
 CORS_ALLOWED_ORIGINS = env_setting.CORS_ALLOWED_ORIGINS

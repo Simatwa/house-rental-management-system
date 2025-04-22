@@ -100,7 +100,7 @@ class CustomUser(AbstractUser):
         unique=True,
     )
 
-    #USERNAME_FIELD = "email"
+    # USERNAME_FIELD = "email"
 
     REQUIRED_FIELDS = (
         "email",
