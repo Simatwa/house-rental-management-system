@@ -1,9 +1,7 @@
 // API service base
 const getApiBaseUrl = () => {
-  const { protocol, hostname } = window.location;
-  const isDevelopment = hostname === 'localhost' || hostname === '127.0.0.1';
-  const port = isDevelopment ? ':8000' : '';
-  return `${protocol}//${hostname}${port}/api/v1`;
+  const { origin } = window.location;
+  return `${origin}/api/v1`;
 };
 
 const API_BASE_URL = getApiBaseUrl();

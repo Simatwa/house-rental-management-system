@@ -18,7 +18,7 @@ export const UnitGroupModal: React.FC<UnitGroupModalProps> = ({
       <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
         <div className="fixed inset-0 bg-black/30 backdrop-filter backdrop-blur-sm transition-opacity" onClick={onClose} />
         
-        <div className="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+        <div className="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg max-h-[90vh]">
           <div className="absolute right-4 top-4">
             <button
               onClick={onClose}
@@ -48,7 +48,7 @@ export const UnitGroupModal: React.FC<UnitGroupModalProps> = ({
                   </div>
                 </div>
                 
-                <div className="mt-6">
+                <div className="mt-6 overflow-y-auto max-h-[40vh] pr-2">
                   <div 
                     className="text-gray-600 dark:text-gray-300 prose dark:prose-invert"
                     dangerouslySetInnerHTML={{ __html: unitGroup.description }}

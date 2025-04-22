@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, AlertCircle, Clock, X, Edit2, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, AlertCircle, Clock, X, Edit2, Trash2, Eye } from 'lucide-react';
 import { DashboardLayout } from '../../components/dashboard/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -17,7 +17,6 @@ export const ConcernsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<ConcernStatus | ''>('');
-  const [expandedResponseId, setExpandedResponseId] = useState<number | null>(null);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -45,7 +44,8 @@ export const ConcernsPage: React.FC = () => {
     fetchConcerns();
   }, [filterStatus]);
 
-  const handleViewDetails = async (id: number) => {
+  const handleViewDetails = async (id: number, e?: React.MouseEvent) => {
+    e?.stopPropagation();
     try {
       const details = await coreService.getConcernDetails(id);
       setSelectedConcern(details);
@@ -114,10 +114,6 @@ export const ConcernsPage: React.FC = () => {
     handleViewDetails(id).then(() => setShowDeleteModal(true));
   };
 
-  const handleToggleResponse = (id: number) => {
-    setExpandedResponseId(expandedResponseId === id ? null : id);
-  };
-
   const canEdit = (status: ConcernStatus) => {
     return ![ConcernStatus.RESOLVED, ConcernStatus.CLOSED].includes(status);
   };
@@ -125,15 +121,15 @@ export const ConcernsPage: React.FC = () => {
   const getStatusColor = (status: ConcernStatus) => {
     switch (status) {
       case ConcernStatus.OPEN:
-        return 'text-red-600 bg-red-50';
+        return 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-900/50';
       case ConcernStatus.IN_PROGRESS:
-        return 'text-orange-600 bg-orange-50';
+        return 'text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-900/50';
       case ConcernStatus.RESOLVED:
-        return 'text-green-600 bg-green-50';
+        return 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/50';
       case ConcernStatus.CLOSED:
-        return 'text-gray-600 bg-gray-50';
+        return 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-800';
       default:
-        return 'text-gray-600 bg-gray-50';
+        return 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-800';
     }
   };
 
@@ -145,9 +141,9 @@ export const ConcernsPage: React.FC = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="sticky top-0 bg-gray-100 z-10 pb-4">
+        <div className="sticky top-0 bg-gray-100 dark:bg-gray-900 z-10 pb-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-900">Concerns</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Concerns</h1>
             
             <div className="flex items-center gap-2">
               <Select
@@ -176,7 +172,7 @@ export const ConcernsPage: React.FC = () => {
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 text-red-600 rounded-md flex items-center gap-2">
+          <div className="p-4 bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 rounded-md flex items-center gap-2">
             <AlertCircle className="w-5 h-5" />
             <span>{error}</span>
           </div>
@@ -186,11 +182,11 @@ export const ConcernsPage: React.FC = () => {
           {/* Concerns List */}
           <div className="lg:col-span-2">
             {loading ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                 Loading concerns...
               </div>
             ) : concerns.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                 No concerns found
               </div>
             ) : (
@@ -198,10 +194,9 @@ export const ConcernsPage: React.FC = () => {
                 {concerns.map((concern) => (
                   <Card
                     key={concern.id}
-                    className={`cursor-pointer transition-shadow hover:shadow-md ${
+                    className={`transition-shadow hover:shadow-md ${
                       selectedConcern?.id === concern.id ? 'ring-2 ring-orange-500' : ''
                     }`}
-                    onClick={() => handleViewDetails(concern.id)}
                   >
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start">
@@ -209,12 +204,20 @@ export const ConcernsPage: React.FC = () => {
                           <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(concern.status)}`}>
                             {concern.status.replace(/_/g, ' ')}
                           </span>
-                          <h3 className="text-lg font-semibold mt-2">{concern.about}</h3>
+                          <h3 className="text-lg font-semibold mt-2 text-gray-900 dark:text-gray-100">{concern.about}</h3>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
                             {formatDate(concern.created_at)}
                           </span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => handleViewDetails(concern.id, e)}
+                            leftIcon={<Eye className="w-4 h-4" />}
+                          >
+                            View
+                          </Button>
                           {canEdit(concern.status) && (
                             <Button
                               variant="outline"
@@ -244,80 +247,70 @@ export const ConcernsPage: React.FC = () => {
 
           {/* Concern Details */}
           <div className="lg:col-span-1">
-            {selectedConcern ? (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Concern Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedConcern.status)}`}>
-                      {selectedConcern.status.replace(/_/g, ' ')}
-                    </span>
-                    <h3 className="text-lg font-semibold mt-2">{selectedConcern.about}</h3>
-                  </div>
-
-                  <div className="prose prose-sm max-w-none">
-                    <p>{selectedConcern.details}</p>
-                  </div>
-
-                  {selectedConcern.response && (
+            <div className="sticky top-[5.5rem]">
+              {selectedConcern ? (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Concern Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 max-h-[calc(100vh-16rem)] overflow-y-auto">
                     <div>
-                      <button
-                        onClick={() => handleToggleResponse(selectedConcern.id)}
-                        className="text-orange-600 hover:text-orange-700 text-sm font-medium flex items-center gap-1"
-                      >
-                        {expandedResponseId === selectedConcern.id ? (
-                          <>Show less <ChevronUp className="w-4 h-4" /></>
-                        ) : (
-                          <>Show more <ChevronDown className="w-4 h-4" /></>
-                        )}
-                      </button>
-                      
-                      {expandedResponseId === selectedConcern.id && (
-                        <div className="mt-2 bg-gray-50 p-4 rounded-md">
-                          <h4 className="font-medium mb-2">Response</h4>
-                          <p className="text-sm text-gray-600">{selectedConcern.response}</p>
-                        </div>
+                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedConcern.status)}`}>
+                        {selectedConcern.status.replace(/_/g, ' ')}
+                      </span>
+                      <h3 className="text-lg font-semibold mt-2 text-gray-900 dark:text-gray-100">{selectedConcern.about}</h3>
+                    </div>
+
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      <p>{selectedConcern.details}</p>
+                    </div>
+
+                    {selectedConcern.response && (
+                      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
+                        <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Response</h4>
+                        <div 
+                          className="prose prose-sm dark:prose-invert max-w-none"
+                          dangerouslySetInnerHTML={{ __html: selectedConcern.response }}
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        <span>Created: {formatDate(selectedConcern.created_at)}</span>
+                      </div>
+                      {selectedConcern.updated_at !== selectedConcern.created_at && (
+                        <div>Updated: {formatDate(selectedConcern.updated_at)}</div>
                       )}
                     </div>
-                  )}
 
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span>Created: {formatDate(selectedConcern.created_at)}</span>
-                    </div>
-                    {selectedConcern.updated_at !== selectedConcern.created_at && (
-                      <div>Updated: {formatDate(selectedConcern.updated_at)}</div>
-                    )}
-                  </div>
-
-                  <div className="flex gap-2 pt-4">
-                    {canEdit(selectedConcern.status) && (
+                    <div className="flex gap-2 pt-4">
+                      {canEdit(selectedConcern.status) && (
+                        <Button
+                          variant="outline"
+                          onClick={() => handleEdit(selectedConcern.id)}
+                          leftIcon={<Edit2 className="w-4 h-4" />}
+                        >
+                          Edit
+                        </Button>
+                      )}
                       <Button
-                        variant="outline"
-                        onClick={() => handleEdit(selectedConcern.id)}
-                        leftIcon={<Edit2 className="w-4 h-4" />}
+                        variant="danger"
+                        onClick={() => setShowDeleteModal(true)}
+                        leftIcon={<Trash2 className="w-4 h-4" />}
                       >
-                        Edit
+                        Delete
                       </Button>
-                    )}
-                    <Button
-                      variant="danger"
-                      onClick={() => setShowDeleteModal(true)}
-                      leftIcon={<Trash2 className="w-4 h-4" />}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                Select a concern to view details
-              </div>
-            )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  Select a concern to view details
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -330,14 +323,14 @@ export const ConcernsPage: React.FC = () => {
               <CardTitle>{selectedConcern ? 'Edit Concern' : 'New Concern'}</CardTitle>
               <button
                 onClick={() => setShowEditModal(false)}
-                className="absolute right-4 top-4 text-gray-400 hover:text-gray-500"
+                className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
               >
                 <X className="w-6 h-6" />
               </button>
             </CardHeader>
             <CardContent>
               {formError && (
-                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-md">
+                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 rounded-md">
                   {formError}
                 </div>
               )}
@@ -352,14 +345,14 @@ export const ConcernsPage: React.FC = () => {
                 />
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Details
                   </label>
                   <textarea
                     value={formData.details}
                     onChange={(e) => setFormData({ ...formData, details: e.target.value })}
                     rows={4}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                     required
                   />
                 </div>
@@ -395,7 +388,7 @@ export const ConcernsPage: React.FC = () => {
               <CardTitle>Delete Concern</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
                 Are you sure you want to delete this concern? This action cannot be undone.
               </p>
               <div className="flex justify-end gap-2">

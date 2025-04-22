@@ -40,7 +40,7 @@ export const UnitInfoPage: React.FC = () => {
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
           Loading information...
         </div>
       </DashboardLayout>
@@ -50,7 +50,7 @@ export const UnitInfoPage: React.FC = () => {
   if (error) {
     return (
       <DashboardLayout>
-        <div className="p-4 bg-red-50 text-red-600 rounded-md flex items-center gap-2">
+        <div className="p-4 bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 rounded-md flex items-center gap-2">
           <AlertCircle className="w-5 h-5" />
           <span>{error}</span>
         </div>
@@ -61,7 +61,7 @@ export const UnitInfoPage: React.FC = () => {
   if (!unitInfo || !houseInfo) {
     return (
       <DashboardLayout>
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
           No information available
         </div>
       </DashboardLayout>
@@ -71,10 +71,11 @@ export const UnitInfoPage: React.FC = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900">Property Information</h1>
+        <div className="sticky top-0 bg-gray-100 dark:bg-gray-900 z-10 pb-4">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Property Information</h1>
+        </div>
 
         <div className="grid grid-cols-1 gap-6">
-          {/* House Details */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -92,36 +93,35 @@ export const UnitInfoPage: React.FC = () => {
                   />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                     {houseInfo.name}
                   </h2>
-                  <p className="flex items-center gap-2 text-gray-600 mt-1">
+                  <p className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mt-1">
                     <MapPin className="w-4 h-4" />
                     {houseInfo.address}
                   </p>
                   <div 
-                    className="mt-2 prose prose-sm"
+                    className="mt-2 prose prose-sm dark:prose-invert"
                     dangerouslySetInnerHTML={{ __html: houseInfo.description }}
                   />
                 </div>
               </div>
 
-              {/* House Office */}
               {houseInfo.office && (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-medium text-gray-900 mb-2">Office Information</h3>
+                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Office Information</h3>
                   <div className="space-y-2">
-                    <p className="text-gray-600">{houseInfo.office.name}</p>
-                    <p className="text-gray-600">{houseInfo.office.description}</p>
+                    <p className="text-gray-600 dark:text-gray-400">{houseInfo.office.name}</p>
+                    <p className="text-gray-600 dark:text-gray-400">{houseInfo.office.description}</p>
                     <div className="flex flex-wrap gap-4">
                       {houseInfo.office.contact_number && (
-                        <div className="flex items-center gap-2 text-gray-600">
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                           <Phone className="w-4 h-4" />
                           {houseInfo.office.contact_number}
                         </div>
                       )}
                       {houseInfo.office.email && (
-                        <div className="flex items-center gap-2 text-gray-600">
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                           <Mail className="w-4 h-4" />
                           {houseInfo.office.email}
                         </div>
@@ -131,24 +131,26 @@ export const UnitInfoPage: React.FC = () => {
                 </div>
               )}
 
-              {/* House Communities */}
               {houseInfo.communities.length > 0 && (
                 <div>
-                  <h3 className="font-medium text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
                     <Globe className="w-5 h-5 text-blue-500" />
                     House Communities
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {houseInfo.communities.map((community, index) => (
-                      <div key={index} className="bg-gray-50 rounded-lg p-4">
-                        <h4 className="font-medium text-gray-900">{community.name}</h4>
-                        <p className="text-gray-600 text-sm mt-1">{community.description}</p>
+                      <div key={index} className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
+                        <h4 className="font-medium text-gray-900 dark:text-gray-100">{community.name}</h4>
+                        <div 
+                          className="prose prose-sm dark:prose-invert mt-1"
+                          dangerouslySetInnerHTML={{ __html: community.description }}
+                        />
                         {community.social_media_link && (
                           <a
                             href={community.social_media_link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 text-sm mt-2"
+                            className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 text-sm mt-2"
                           >
                             <Globe className="w-4 h-4" />
                             Join Community
@@ -162,7 +164,6 @@ export const UnitInfoPage: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Unit Group Details */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -180,10 +181,10 @@ export const UnitInfoPage: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                     {unitInfo.unit_group.name}
                   </h2>
-                  <p className="text-gray-500">{unitInfo.unit_group.abbreviated_name}</p>
+                  <p className="text-gray-500 dark:text-gray-400">{unitInfo.unit_group.abbreviated_name}</p>
                 </div>
               </div>
 
@@ -191,8 +192,8 @@ export const UnitInfoPage: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <Coins className="w-5 h-5 text-blue-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Monthly Rent</p>
-                    <p className="text-gray-900">
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Monthly Rent</p>
+                    <p className="text-gray-900 dark:text-gray-100">
                       {formatCurrency(unitInfo.unit_group.monthly_rent)}
                     </p>
                   </div>
@@ -201,8 +202,8 @@ export const UnitInfoPage: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <Shield className="w-5 h-5 text-purple-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Deposit</p>
-                    <p className="text-gray-900">
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Deposit</p>
+                    <p className="text-gray-900 dark:text-gray-100">
                       {formatCurrency(unitInfo.unit_group.deposit_amount)}
                     </p>
                   </div>
@@ -211,57 +212,27 @@ export const UnitInfoPage: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <Users className="w-5 h-5 text-orange-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Caretakers</p>
-                    <p className="text-gray-900">{unitInfo.unit_group.caretakers.length}</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Caretakers</p>
+                    <p className="text-gray-900 dark:text-gray-100">{unitInfo.unit_group.caretakers.length}</p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-2">Description</h3>
-                <p className="text-gray-600">{unitInfo.unit_group.description}</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Description</h3>
+                <div 
+                  className="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400"
+                  dangerouslySetInnerHTML={{ __html: unitInfo.unit_group.description }}
+                />
               </div>
 
-              {/* Unit Group Communities */}
-              {houseInfo.communities.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <Globe className="w-5 h-5 text-blue-500" />
-                    Available Communities
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {houseInfo.communities.map((community, index) => (
-                      <div key={index} className="bg-gray-50 rounded-lg p-4">
-                        <h4 className="font-medium text-gray-900">{community.name}</h4>
-                        <p className="text-gray-600 text-sm mt-1">{community.description}</p>
-                        {community.social_media_link && (
-                          <Button
-                            as="a"
-                            href={community.social_media_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            variant="outline"
-                            size="sm"
-                            className="mt-2"
-                            leftIcon={<Globe className="w-4 h-4" />}
-                          >
-                            Join Community
-                          </Button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Caretakers */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">Caretakers</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Caretakers</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {unitInfo.unit_group.caretakers.map((caretaker, index) => (
                     <div
                       key={index}
-                      className="flex items-start gap-3 p-4 rounded-lg bg-gray-50"
+                      className="flex items-start gap-3 p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50"
                     >
                       <Avatar
                         src={caretaker.profile}
@@ -269,19 +240,19 @@ export const UnitInfoPage: React.FC = () => {
                         size="lg"
                       />
                       <div>
-                        <h4 className="font-medium text-gray-900">
+                        <h4 className="font-medium text-gray-900 dark:text-gray-100">
                           {caretaker.first_name} {caretaker.last_name}
                         </h4>
 
                         {caretaker.phone_number && (
-                          <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
+                          <div className="flex items-center gap-2 mt-1 text-sm text-gray-600 dark:text-gray-400">
                             <Phone className="w-4 h-4" />
                             <span>{caretaker.phone_number}</span>
                           </div>
                         )}
 
                         {caretaker.email && (
-                          <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
+                          <div className="flex items-center gap-2 mt-1 text-sm text-gray-600 dark:text-gray-400">
                             <Mail className="w-4 h-4" />
                             <span>{caretaker.email}</span>
                           </div>
@@ -294,7 +265,6 @@ export const UnitInfoPage: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Unit Details */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -306,10 +276,10 @@ export const UnitInfoPage: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-900">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                       {unitInfo.name}
                     </h2>
-                    <p className="text-gray-500">{unitInfo.abbreviated_name}</p>
+                    <p className="text-gray-500 dark:text-gray-400">{unitInfo.abbreviated_name}</p>
                   </div>
                   <Badge
                     variant={

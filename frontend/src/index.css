@@ -28,6 +28,52 @@ html {
   backdrop-filter: blur(4px);
 }
 
+/* Custom scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(75, 85, 99, 0.5);
+}
+
+/* HTML content styling */
+.formatted-content {
+  @apply max-w-none overflow-hidden
+    [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-6 [&>h1]:text-gray-900 dark:[&>h1]:text-gray-100
+    [&>h2]:text-2xl [&>h2]:font-semibold [&>h2]:mb-4 [&>h2]:text-gray-800 dark:[&>h2]:text-gray-200
+    [&>h3]:text-xl [&>h3]:font-medium [&>h3]:mb-3 [&>h3]:text-gray-800 dark:[&>h3]:text-gray-200
+    [&>h4]:text-lg [&>h4]:font-medium [&>h4]:mb-2 [&>h4]:text-gray-700 dark:[&>h4]:text-gray-300
+    [&>h5]:text-base [&>h5]:font-medium [&>h5]:mb-2 [&>h5]:text-gray-700 dark:[&>h5]:text-gray-300
+    [&>h6]:text-sm [&>h6]:font-medium [&>h6]:mb-2 [&>h6]:text-gray-700 dark:[&>h6]:text-gray-300
+    [&>p]:text-base [&>p]:leading-relaxed [&>p]:mb-4 [&>p]:text-gray-600 dark:[&>p]:text-gray-400
+    [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-4 [&>ul>li]:text-gray-600 [&>ul>li]:mb-2 dark:[&>ul>li]:text-gray-400
+    [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-4 [&>ol>li]:text-gray-600 [&>ol>li]:mb-2 dark:[&>ol>li]:text-gray-400
+    [&>blockquote]:pl-4 [&>blockquote]:border-l-4 [&>blockquote]:border-gray-300 dark:[&>blockquote]:border-gray-600
+    [&>blockquote]:italic [&>blockquote]:text-gray-600 [&>blockquote]:mb-4 dark:[&>blockquote]:text-gray-400
+    [&>pre]:bg-gray-100 [&>pre]:p-4 [&>pre]:rounded-lg [&>pre]:mb-4 [&>pre]:overflow-x-auto dark:[&>pre]:bg-gray-800
+    [&>code]:font-mono [&>code]:text-sm [&>code]:bg-gray-100 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded dark:[&>code]:bg-gray-800
+    [&>table]:w-full [&>table]:mb-4 [&>table]:border-collapse
+    [&>table>thead>tr>th]:bg-gray-100 [&>table>thead>tr>th]:text-left [&>table>thead>tr>th]:p-2 [&>table>thead>tr>th]:border [&>table>thead>tr>th]:border-gray-300 dark:[&>table>thead>tr>th]:bg-gray-800 dark:[&>table>thead>tr>th]:border-gray-600
+    [&>table>tbody>tr>td]:p-2 [&>table>tbody>tr>td]:border [&>table>tbody>tr>td]:border-gray-300 dark:[&>table>tbody>tr>td]:border-gray-600
+    [&>a]:text-blue-600 [&>a]:underline [&>a:hover]:text-blue-800 dark:[&>a]:text-blue-400 dark:[&>a:hover]:text-blue-300
+    [&>hr]:my-8 [&>hr]:border-gray-200 dark:[&>hr]:border-gray-700;
+}
+
 /* Responsive design utilities */
 @layer utilities {
   .container-padding {

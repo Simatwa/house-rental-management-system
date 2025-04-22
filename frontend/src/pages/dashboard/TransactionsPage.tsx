@@ -55,49 +55,51 @@ export const TransactionsPage: React.FC = () => {
       case TransactionType.DEPOSIT:
       case TransactionType.RENT_PAYMENT:
       case TransactionType.FEE_PAYMENT:
-        return 'text-green-600';
+        return 'text-green-600 dark:text-green-400';
       case TransactionType.WITHDRAWAL:
-        return 'text-red-600';
+        return 'text-red-600 dark:text-red-400';
       default:
-        return 'text-gray-600';
+        return 'text-gray-600 dark:text-gray-400';
     }
   };
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
-          
-          <div className="flex items-center gap-2">
-            <Select
-              options={[
-                { value: '', label: 'All Means' },
-                ...Object.values(TransactionMeans).map(means => ({
-                  value: means,
-                  label: means
-                }))
-              ]}
-              value={filterMeans}
-              onChange={(value) => setFilterMeans(value as TransactionMeans | '')}
-            />
+        <div className="sticky top-0 bg-gray-100 dark:bg-gray-900 z-10 pb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Transactions</h1>
             
-            <Select
-              options={[
-                { value: '', label: 'All Types' },
-                ...Object.values(TransactionType).map(type => ({
-                  value: type,
-                  label: type.replace(/_/g, ' ')
-                }))
-              ]}
-              value={filterType}
-              onChange={(value) => setFilterType(value as TransactionType | '')}
-            />
+            <div className="flex items-center gap-2">
+              <Select
+                options={[
+                  { value: '', label: 'All Means' },
+                  ...Object.values(TransactionMeans).map(means => ({
+                    value: means,
+                    label: means
+                  }))
+                ]}
+                value={filterMeans}
+                onChange={(value) => setFilterMeans(value as TransactionMeans | '')}
+              />
+              
+              <Select
+                options={[
+                  { value: '', label: 'All Types' },
+                  ...Object.values(TransactionType).map(type => ({
+                    value: type,
+                    label: type.replace(/_/g, ' ')
+                  }))
+                ]}
+                value={filterType}
+                onChange={(value) => setFilterType(value as TransactionType | '')}
+              />
+            </div>
           </div>
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 text-red-600 rounded-md">
+          <div className="p-4 bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 rounded-md">
             {error}
           </div>
         )}
@@ -108,11 +110,11 @@ export const TransactionsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                 Loading transactions...
               </div>
             ) : transactions.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                 No transactions found
               </div>
             ) : (
@@ -120,24 +122,24 @@ export const TransactionsPage: React.FC = () => {
                 {transactions.map((transaction, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200"
+                    className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="p-2 bg-gray-50 rounded-full">
+                      <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded-full">
                         {getTransactionIcon(transaction.type)}
                       </div>
                       
                       <div>
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
                           {transaction.type.replace(/_/g, ' ')}
                         </p>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                           <span>{transaction.means}</span>
                           <span>•</span>
                           <span>{formatDate(transaction.created_at)}</span>
                         </div>
                         {transaction.notes && (
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                             {transaction.notes}
                           </p>
                         )}
@@ -148,7 +150,7 @@ export const TransactionsPage: React.FC = () => {
                       <p className={`font-medium ${getTransactionColor(transaction.type)}`}>
                         {formatCurrency(transaction.amount)}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         Ref: {transaction.reference}
                       </p>
                     </div>

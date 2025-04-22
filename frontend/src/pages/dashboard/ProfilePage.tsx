@@ -101,7 +101,7 @@ export const ProfilePage: React.FC = () => {
     <DashboardLayout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Profile</h1>
           <Button
             variant="primary"
             onClick={() => {
@@ -192,7 +192,7 @@ export const ProfilePage: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="text-center">
-                <p className="text-3xl font-bold text-gray-900 mb-6">
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
                   {formatCurrency(user?.account_balance || 0)}
                 </p>
                 <Button
@@ -221,21 +221,21 @@ export const ProfilePage: React.FC = () => {
               </CardTitle>
               <button
                 onClick={() => setShowMpesaModal(false)}
-                className="absolute right-4 top-4 text-gray-400 hover:text-gray-500"
+                className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
               >
                 <X className="w-6 h-6" />
               </button>
             </CardHeader>
             <CardContent>
               {error && (
-                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-md flex items-center gap-2">
+                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 rounded-md flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
 
               {success && (
-                <div className="mb-4 p-3 bg-green-50 text-green-600 rounded-md flex items-center gap-2">
+                <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-md flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 flex-shrink-0" />
                   <span>{success}</span>
                 </div>
@@ -243,7 +243,7 @@ export const ProfilePage: React.FC = () => {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Quick Amount
                   </label>
                   <div className="grid grid-cols-3 gap-2">
@@ -254,8 +254,8 @@ export const ProfilePage: React.FC = () => {
                         onClick={() => setMpesaAmount(amount.toString())}
                         className={`p-2 text-sm rounded-md border transition-colors ${
                           mpesaAmount === amount.toString()
-                            ? 'border-orange-500 bg-orange-50 text-orange-700'
-                            : 'border-gray-200 hover:border-orange-200 hover:bg-orange-50'
+                            ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-800 hover:bg-orange-50 dark:hover:bg-orange-900/20'
                         }`}
                       >
                         {formatCurrency(amount)}
@@ -287,17 +287,17 @@ export const ProfilePage: React.FC = () => {
                 </div>
 
                 {mpesaDetails && (
-                  <div className="text-sm text-gray-600 bg-gray-50 p-4 rounded-md space-y-2">
+                  <div className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-4 rounded-md space-y-2">
                     <div className="flex items-center gap-2">
-                      <CreditCard className="w-4 h-4 text-gray-500" />
+                      <CreditCard className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                       <span>Paybill: {mpesaDetails.paybill_number}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Wallet className="w-4 h-4 text-gray-500" />
+                      <Wallet className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                       <span>Account: {mpesaDetails.account_number}</span>
                     </div>
                     {mpesaDetails.details && (
-                      <p className="text-sm text-gray-500 mt-2">{mpesaDetails.details}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{mpesaDetails.details}</p>
                     )}
                   </div>
                 )}
@@ -316,7 +316,7 @@ export const ProfilePage: React.FC = () => {
 
                   <button
                     onClick={() => setShowOtherPayments(!showOtherPayments)}
-                    className="text-sm text-orange-600 hover:underline text-center"
+                    className="text-sm text-orange-600 dark:text-orange-400 hover:underline text-center"
                   >
                     {showOtherPayments ? 'Hide' : 'Show'} other payment methods
                   </button>
@@ -324,19 +324,19 @@ export const ProfilePage: React.FC = () => {
 
                 {showOtherPayments && otherPayments.length > 0 && (
                   <div className="mt-4 space-y-3">
-                    <h4 className="font-medium text-gray-900">Other Payment Methods</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100">Other Payment Methods</h4>
                     {otherPayments.map((payment, index) => (
-                      <div key={index} className="bg-gray-50 p-4 rounded-md space-y-2">
+                      <div key={index} className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md space-y-2">
                         <div className="flex items-center gap-2">
-                          <CreditCard className="w-4 h-4 text-gray-500" />
-                          <p className="font-medium">{payment.name}</p>
+                          <CreditCard className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                          <p className="font-medium text-gray-900 dark:text-gray-100">{payment.name}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Wallet className="w-4 h-4 text-gray-500" />
-                          <p className="text-sm text-gray-600">Account: {payment.account_number}</p>
+                          <Wallet className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                          <p className="text-sm text-gray-600 dark:text-gray-400">Account: {payment.account_number}</p>
                         </div>
                         {payment.details && (
-                          <p className="text-sm text-gray-600">{payment.details}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{payment.details}</p>
                         )}
                       </div>
                     ))}

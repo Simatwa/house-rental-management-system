@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, Menu, X, User, MessageSquare, Wrench, CreditCard, LogOut, Building, 
   MapPin, Star, FileText, Sun, Moon, HelpCircle 
@@ -20,10 +20,14 @@ export const Header: React.FC<{
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showPolicyModal, setShowPolicyModal] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [policyDocument, setPolicyDocument] = useState(null);
+  const [termsDocument, setTermsDocument] = useState(null);
   const { isAuthenticated, user, logout } = useAuth();
   const { businessInfo } = useBusinessInfo();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
   
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -52,9 +56,20 @@ export const Header: React.FC<{
   const handleShowPolicy = async () => {
     try {
       const document = await businessService.getDocument(DocumentName.POLICY);
+      setPolicyDocument(document);
       setShowPolicyModal(true);
     } catch (error) {
       console.error('Error fetching policy:', error);
+    }
+  };
+
+  const handleShowTerms = async () => {
+    try {
+      const document = await businessService.getDocument(DocumentName.TERMS_OF_USE);
+      setTermsDocument(document);
+      setShowTermsModal(true);
+    } catch (error) {
+      console.error('Error fetching terms:', error);
     }
   };
   
@@ -86,6 +101,11 @@ export const Header: React.FC<{
     {
       name: 'Policy',
       onClick: handleShowPolicy,
+      icon: <FileText className="w-5 h-5" />,
+    },
+    {
+      name: 'Terms of Service',
+      onClick: handleShowTerms,
       icon: <FileText className="w-5 h-5" />,
     },
   ];
@@ -154,7 +174,7 @@ export const Header: React.FC<{
             {links.map((link) => (
               <button
                 key={link.name}
-                onClick={link.onClick || (() => {})}
+                onClick={link.onClick || (() => navigate(link.path || '/'))}
                 className={`inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 ${
                   isActive(link.path || '')
                     ? 'border-orange-500 text-gray-900 dark:text-white'
@@ -182,7 +202,7 @@ export const Header: React.FC<{
 
             {isAuthenticated ? (
               <div className="relative ml-3">
-                <div className="flex items-center gap-3">
+                <Link to="/dashboard" className="flex items-center gap-3">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     {user?.first_name} {user?.last_name}
                   </span>
@@ -191,14 +211,7 @@ export const Header: React.FC<{
                     name={`${user?.first_name} ${user?.last_name}`}
                     size="sm"
                   />
-                  <button
-                    onClick={handleLogout}
-                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-                    title="Logout"
-                  >
-                    <LogOut className="w-5 h-5" />
-                  </button>
-                </div>
+                </Link>
               </div>
             ) : (
               <Link
@@ -256,7 +269,7 @@ export const Header: React.FC<{
             {links.map((link) => (
               <button
                 key={link.name}
-                onClick={link.onClick || (() => {})}
+                onClick={link.onClick || (() => navigate(link.path || '/'))}
                 className={`flex w-full items-center px-3 py-2 text-base font-medium ${
                   isActive(link.path || '')
                     ? 'bg-orange-50 text-orange-700 dark:bg-orange-900 dark:text-orange-200 border-l-4 border-orange-500'
@@ -268,7 +281,7 @@ export const Header: React.FC<{
               </button>
             ))}
             
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <button
                 onClick={handleLogout}
                 className="flex w-full items-center px-3 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white border-l-4 border-transparent"
@@ -278,9 +291,7 @@ export const Header: React.FC<{
                 </span>
                 Logout
               </button>
-            )}
-            
-            {!isAuthenticated && (
+            ) : (
               <Link
                 to="/login"
                 onClick={closeMenu}
@@ -297,14 +308,18 @@ export const Header: React.FC<{
       )}
 
       {/* Policy Modal */}
-      {showPolicyModal && (
+      {showPolicyModal && policyDocument && (
         <DocumentModal
-          document={{
-            name: DocumentName.POLICY,
-            content: '',
-            updated_at: new Date().toISOString()
-          }}
+          document={policyDocument}
           onClose={() => setShowPolicyModal(false)}
+        />
+      )}
+
+      {/* Terms Modal */}
+      {showTermsModal && termsDocument && (
+        <DocumentModal
+          document={termsDocument}
+          onClose={() => setShowTermsModal(false)}
         />
       )}
     </header>
