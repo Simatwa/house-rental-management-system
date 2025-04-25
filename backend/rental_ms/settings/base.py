@@ -203,7 +203,7 @@ DEMO = env_setting.DEMO
 
 # ADMIN
 JAZZMIN_SETTINGS = {
-    "show_ui_builder": True,  # env_setting.DEBUG,
+    "show_ui_builder": env_setting.DEBUG,
     "site_title": SITE_NAME,
     "site_header": SITE_NAME,
     "site_brand": SITE_NAME,
