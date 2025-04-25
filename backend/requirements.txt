@@ -5,7 +5,7 @@ pillow==11.1.0
 envist==0.0.4
 pymysql==1.1.1 # For mysql
 #psycopg2-2.9.10  # for Postgres
-django-unfold==0.53.0
+#django-unfold==0.53.0 # Not required
 django-import-export>=4.3.7
 django-cors-headers==4.7.0
 django-ckeditor==6.7.2
