@@ -82,7 +82,7 @@ class House(models.Model):
         return dict(
             id=self.id,
             name=self.name,
-            #office_id=self.office.id,
+            # office_id=self.office.id,
             address=self.address,
             description=self.description,
             picture=self.picture.name,
