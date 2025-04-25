@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { 
-  Home, Menu, X, User, MessageSquare, Wrench, CreditCard, LogOut, Building, 
-  MapPin, Star, FileText, Sun, Moon, HelpCircle 
+import {
+  Home, Menu, X, User, MessageSquare, Wrench, CreditCard, LogOut, Building,
+  MapPin, Star, FileText, Sun, Moon, HelpCircle
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -28,26 +28,26 @@ export const Header: React.FC<{
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
-  
+
   const closeMenu = () => {
     setMenuOpen(false);
   };
-  
+
   const handleLogout = () => {
     logout();
     closeMenu();
   };
-  
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
     setSearchTerm(term);
     onSearch?.(term);
   };
-  
+
   const handleScrollTo = (id: string) => {
     scrollToElement(id);
     closeMenu();
@@ -72,11 +72,11 @@ export const Header: React.FC<{
       console.error('Error fetching terms:', error);
     }
   };
-  
+
   const isActive = (path: string) => {
     return location.pathname === path;
   };
-  
+
   const publicLinks = [
     {
       name: 'Rental Houses',
@@ -109,7 +109,7 @@ export const Header: React.FC<{
       icon: <FileText className="w-5 h-5" />,
     },
   ];
-  
+
   const privateLinks = [
     {
       name: 'Dashboard',
@@ -118,23 +118,33 @@ export const Header: React.FC<{
     },
     {
       name: 'Messages',
-      path: '/messages',
+      path: '/dashboard/messages',
       icon: <MessageSquare className="w-5 h-5" />,
     },
     {
       name: 'Concerns',
-      path: '/concerns',
+      path: '/dashboard/concerns',
       icon: <Wrench className="w-5 h-5" />,
     },
     {
-      name: 'Payments',
-      path: '/payments',
+      name: 'Transactions',
+      path: '/dashboard/transactions',
       icon: <CreditCard className="w-5 h-5" />,
     },
+    {
+      name: 'Policy',
+      onClick: handleShowPolicy,
+      icon: <FileText className="w-5 h-5" />,
+    },
+    {
+      name: 'Terms of Service',
+      onClick: handleShowTerms,
+      icon: <FileText className="w-5 h-5" />,
+    },
   ];
-  
+
   const links = isAuthenticated ? privateLinks : publicLinks;
-  
+
   return (
     <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,10 +152,10 @@ export const Header: React.FC<{
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-3">
               {businessInfo?.logo ? (
-                <img 
-                  src={businessInfo.logo} 
-                  alt={businessInfo.short_name} 
-                  className="h-8 w-auto"
+                <img
+                  src={businessInfo.logo}
+                  alt={businessInfo.short_name}
+                  className="h-8 w-auto business-logo"
                 />
               ) : (
                 <Building className="w-8 h-8 text-orange-500" />
@@ -155,7 +165,7 @@ export const Header: React.FC<{
               </span>
             </Link>
           </div>
-          
+
           {/* Search bar */}
           {onSearch && (
             <div className="hidden md:flex items-center flex-1 max-w-sm mx-8">
@@ -168,24 +178,23 @@ export const Header: React.FC<{
               />
             </div>
           )}
-          
+
           {/* Desktop navigation */}
           <nav className="hidden md:ml-6 md:flex md:space-x-8">
             {links.map((link) => (
               <button
                 key={link.name}
                 onClick={link.onClick || (() => navigate(link.path || '/'))}
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 ${
-                  isActive(link.path || '')
-                    ? 'border-orange-500 text-gray-900 dark:text-white'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white hover:border-gray-300'
-                }`}
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 ${isActive(link.path || '')
+                  ? 'border-orange-500 text-gray-900 dark:text-white'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white hover:border-gray-300'
+                  }`}
               >
                 {link.name}
               </button>
             ))}
           </nav>
-          
+
           {/* Theme toggle and user menu */}
           <div className="hidden md:ml-6 md:flex md:items-center space-x-4">
             <button
@@ -222,7 +231,7 @@ export const Header: React.FC<{
               </Link>
             )}
           </div>
-          
+
           {/* Mobile menu button */}
           <div className="flex items-center md:hidden">
             <button
@@ -249,7 +258,7 @@ export const Header: React.FC<{
           </div>
         </div>
       </div>
-      
+
       {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden">
@@ -264,23 +273,22 @@ export const Header: React.FC<{
               />
             </div>
           )}
-          
+
           <div className="pt-2 pb-3 space-y-1">
             {links.map((link) => (
               <button
                 key={link.name}
                 onClick={link.onClick || (() => navigate(link.path || '/'))}
-                className={`flex w-full items-center px-3 py-2 text-base font-medium ${
-                  isActive(link.path || '')
-                    ? 'bg-orange-50 text-orange-700 dark:bg-orange-900 dark:text-orange-200 border-l-4 border-orange-500'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white border-l-4 border-transparent'
-                }`}
+                className={`flex w-full items-center px-3 py-2 text-base font-medium ${isActive(link.path || '')
+                  ? 'bg-orange-50 text-orange-700 dark:bg-orange-900 dark:text-orange-200 border-l-4 border-orange-500'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white border-l-4 border-transparent'
+                  }`}
               >
                 <span className="mr-3">{link.icon}</span>
                 {link.name}
               </button>
             ))}
-            
+
             {isAuthenticated ? (
               <button
                 onClick={handleLogout}
