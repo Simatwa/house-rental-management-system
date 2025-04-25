@@ -221,7 +221,7 @@ JAZZMIN_SETTINGS = {
         },
         {
             "name": "Support",
-            "url": "https://github.com/Simatwa/carwash-management-system/issues",
+            "url": "https://github.com/Simatwa/house-rental-management-system/issues",
             "new_window": True,
         },
         {"model": "users.CustomUser"},

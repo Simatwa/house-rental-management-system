@@ -52,6 +52,8 @@ def generate_document_filepath(instance, filename: str) -> str:
 
 
 def send_email(subject: str, message: str, recipient: str, html_message: str = None):
+    if settings.EMAIL_HOST_PASSWORD is None:
+        return
     send_mail(
         subject=subject,
         message=message,
