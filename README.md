@@ -12,7 +12,6 @@
   A full-stack, user-friendly platform to manage rental properties with ease – built for property managers, tenants, and system admins. 🏘️💼📱
 </p>
 
----
 
 <h1 align="center">🚀 Demonstrations</h1>
 
@@ -22,7 +21,6 @@
 | **Tenant Dashboard** | ![Dashboard](assets/demo/dashboard.png) |
 | **Admin Panel**      | ![Admin page](assets/demo/admin.png)    |
 
----
 
 ## 🛠 Technologies Used
 
@@ -30,7 +28,6 @@
 * ⚡ **FastAPI** – Provides a fast, modern, and scalable RESTful API.
 * ⚛️ **React** – Powers the frontend with dynamic and interactive components.
 
----
 
 ## ✨ Key Features
 
@@ -65,7 +62,6 @@
 * 📥 Handle tenant concerns
 * 📄 Generate various reports
 
----
 
 ## ⚙️ Installation
 
@@ -89,7 +85,7 @@ source venv/bin/activate        # macOS/Linux
 pip install -r requirements.txt
 
 # Set up Django
-python manage.py makemigrations users hospital
+python manage.py makemigrations users finance external rental management
 python manage.py migrate
 python manage.py collectstatic
 
@@ -102,8 +98,6 @@ python -m fastapi run api
 
 > [!TIP]
 > Consider using **make** command provided by [Makefile](backend/Makefile) for a more smoother control. e.g `$ make install setup developmentsuperuser runserver-prod`
-
----
 
 ## 🌐 Available Endpoints
 
@@ -119,20 +113,14 @@ python -m fastapi run api
 > Username: `developer`
 > Password: `development`
 
----
-
 ## 🙏 Acknowledgements
 
 Special appreciation to **Miss Mwikali** for the idea, trusting me in delivering this and funding of the project – and finally for allowing it to be open-sourced.
-
----
 
 ## 🤝 Contributions Welcome
 
 Have ideas for improvements or features? Found a bug?
 Feel free to open a pull request! Let's collaborate and build a better platform together. 🚀
-
----
 
 ## 📄 License
 
