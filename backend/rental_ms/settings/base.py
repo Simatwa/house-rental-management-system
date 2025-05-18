@@ -239,6 +239,7 @@ JAZZMIN_SETTINGS = {
         "finance.UserAccount": "fas fa-wallet",
         "finance.Account": "fas fa-file-invoice-dollar",
         "finance.ExtraFee": "fas fa-coins",
+        "admin.LogEntry": "fas fa-book",
         "management.Office": "fas fa-building",
         "management.Concern": "fas fa-exclamation-circle",
         "management.Community": "fas fa-users",
