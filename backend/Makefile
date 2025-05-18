@@ -20,7 +20,7 @@ developmentsuperuser:
 runserver:
 	python manage.py runserver
 
-runserver-prod:
+runserver-uwsgi:
 	uwsgi --http=0.0.0.0:8080 -w wsgi:application --static-map /static=files/static --static-map=/media=files/media
 
 runserver-api:
