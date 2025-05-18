@@ -173,6 +173,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Site stuffs
 admin
 jazzmin
 vendor
@@ -189,4 +191,3 @@ _versions
 about
 gallery
 plan-*
-plan-lessons.md
