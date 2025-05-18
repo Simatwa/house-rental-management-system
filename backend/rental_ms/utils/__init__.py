@@ -32,7 +32,7 @@ def send_payment_push(phone_number: str, amount: int, account_reference: str):
         "authorization": settings.MPESA_AUTHORIZATION,
         "BusinessShortCode": "174379",
         "password": settings.MPESA_PASSWORD,
-        "timestamp": settings.MP,  # datetime.now().strftime("%Y%m%d%H%M%S")
+        "timestamp": settings.MPESA_TIMESTAMP,  # datetime.now().strftime("%Y%m%d%H%M%S")
         "TransactionType": "CustomerPayBillOnline",
         "amount": amount,
         "PartyA": "254708374149",
