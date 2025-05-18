@@ -48,6 +48,7 @@ class EnvSettings(BaseModel):
     MPESA_TOKEN: Optional[str] = None
     MPESA_AUTHORIZATION: Optional[str] = None
     MPESA_PASSWORD: Optional[str] = None
+    MPESA_TIMESTAMP: Optional[str] = None
 
     # UTILS
     CURRENCY: Optional[str] = "Ksh"

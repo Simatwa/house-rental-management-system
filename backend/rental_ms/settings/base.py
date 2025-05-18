@@ -189,6 +189,8 @@ MPESA_AUTHORIZATION = env_setting.MPESA_AUTHORIZATION
 """Just for simulation"""
 MPESA_PASSWORD = env_setting.MPESA_PASSWORD
 """Just for simulation"""
+MPESA_TIMESTAMP = env_setting.MPESA_TIMESTAMP
+"""Just for simulation"""
 
 # SITE
 SITE_NAME = env_setting.SITE_NAME
