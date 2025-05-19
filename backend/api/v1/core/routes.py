@@ -227,7 +227,7 @@ def mark_community_message_read(
             .first()
         )
         if not message:
-            raise CommunityMessage.DoesNotExist()
+            raise CommunityMessage.DoesNotExist
         message.read_by.add(tenant)
         message.save()
         return ProcessFeedback(detail="Message marked as read successfully.")
