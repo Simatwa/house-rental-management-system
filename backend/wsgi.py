@@ -5,7 +5,7 @@ Converts fastapi app to wsgi app
 uwsgi --http=0.0.0.0:8080 -w wsgi:application
 
 Using make:
-    $ make runserver-prod
+    $ make runserver-uwsgi
 """
 
 from api import app

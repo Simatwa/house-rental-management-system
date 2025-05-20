@@ -97,7 +97,7 @@ python -m fastapi run api
 ```
 
 > [!TIP]
-> Consider using **make** command provided by [Makefile](backend/Makefile) for a more smoother control. e.g `$ make install setup developmentsuperuser runserver-prod`
+> Consider using **make** command provided by [Makefile](backend/Makefile) for a more smoother control. e.g `$ make install setup developmentsuperuser runserver-uwsgi`
 
 ## 🌐 Available Endpoints
 
